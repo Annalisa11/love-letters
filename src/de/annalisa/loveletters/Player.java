@@ -8,4 +8,14 @@ public class Player {
     private int score;
     private ArrayList<Card> hand;
 
+    public Player(String name){
+        this.name = name;
+        this.score = 0;
+        this.hand = new ArrayList<Card>();
+    }
+
+    @Override
+    public String toString() {
+        return  name + " - " + score + " - " + hand;
+    }
 }

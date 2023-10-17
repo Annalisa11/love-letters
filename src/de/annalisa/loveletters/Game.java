@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Game {
 
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<>();
     private Deck deck;
     private int round;
     private int numberOfCards = 16;
@@ -20,6 +20,36 @@ public class Game {
         createDeck();
         shuffleDeck();
         System.out.println(deck);
+        createPlayers();
+    }
+
+    private void createPlayers() {
+        int numberOfPlayers;
+        numberOfPlayers = validateInputNumbers(new Integer[]{2,3,4}, "With how many players do you want to play? (2,3,4)");
+        for(int i = 0; i < numberOfPlayers; i++){
+            System.out.println("What should player " + (i+1) + " be called?");
+            String name = getStringFromConsole();
+            Player player = new Player(name);
+            players.add(player);
+        }
+        System.out.println(players);
+    }
+
+
+    public int validateInputNumbers(Integer[] validValues, String message){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(message);
+        int input = scanner.nextInt();
+        while(!Arrays.asList(validValues).contains(input)){
+            System.out.println("invalid input. Try again.");
+            input = scanner.nextInt();
+        }
+        return input;
+    }
+
+    public String getStringFromConsole(){
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
     }
 
     private void shuffleDeck() {
@@ -43,6 +73,5 @@ public class Game {
         System.out.println("hallo");
         System.out.println("pierre");
         Game game = new Game();
-
     }
 }

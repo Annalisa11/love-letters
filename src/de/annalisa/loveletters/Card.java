@@ -15,8 +15,12 @@ public class Card {
         return effect;
     }
 
+    public int getCloseness() {
+        return closeness;
+    }
+
     @Override
     public String toString(){
-        return "[ " + name + " - " + closeness + " - " + effect + " ]\n";
+        return "[ " + name + " - " + closeness + " - " + effect + " ]";
     }
 }

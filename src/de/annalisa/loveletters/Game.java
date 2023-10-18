@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
 
@@ -15,78 +16,106 @@ public class Game {
     private Player roundWinner;
     private Player gameWinner;
     private ArrayList<Player> activePlayers = new ArrayList<>();
+    private boolean firstRound = true;
 
     private String[] names = {"Prince", "Prince", "King", "Countess", "Princess", "Guard", "Guard", "Guard", "Guard", "Guard", "Priest", "Priest", "Baron", "Baron", "Handmaid", "Handmaid"};
     private int[] closeness = {5, 5, 6, 7, 8, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4};
     private String[] effects = {"Choose any player (including yourself) to discard his or her hand and draw a new card", "Choose any player (including yourself) to discard his or her hand and draw a new card", "Trade hands with another player your choice", "If you have this card and the King or Prince in your hand, you must discard this card.", "If you discard this card, you are out of the round", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Look at another player's hand", "Look at another player's hand", "You and another player secretly compare hands. The player with the lower value is out of the round.", "You and another player secretly compare hands. The player with the lower value is out of the round.", "Until your next turn, ignore all effects from other players' cards.", "Until your next turn, ignore all effects from other players' cards."};
 
     public void startGame(){
-        //set up game
-        createDeck();
-        shuffleDeck();
-        System.out.println(deck);
+
         createPlayers();
+        do {
+            //set up game
+            createDeck();
+            shuffleDeck();
 
-        //set up deck
-        firstCardOfDeck = deck.getTopCard();
-        if(players.size() == 2){
-            for(int i=0; i < 3; i++){
-                threeOpenCards[i] = deck.getTopCard();
+            //set up deck/cards
+            System.out.println("\n-------");
+            firstCardOfDeck = deck.getTopCard();
+            System.out.println("first card: " + firstCardOfDeck); // remove later, first card should not be visible
+            if(players.size() == 2){
+                for(int i=0; i < 3; i++){
+                    threeOpenCards[i] = deck.getTopCard();
+                }
+                printThreeOpenCards(threeOpenCards);
             }
-        }
-        allPlayersDrawCard(players);
+            System.out.println("-------\n\n");
 
-        System.out.println("-------");
-        System.out.println("first card: " + firstCardOfDeck);
-        printThreeOpenCards(threeOpenCards);
-        System.out.println(deck);
-        System.out.println(players);
+            if(firstRound){
+                //set up players
+                allPlayersDrawCard(players);
+                firstRound = false;
+            }
 
-        //players get second card
-//        allPlayersDrawCard(players);
+            //start round
+            activePlayers = players;
+            startRound();
+            //if player enough tokens, player wins
 
-        //while no winner and cardnumber is 0?
-
-        activePlayers = players;
-        startRound();
-
-
-        //if player enough tokens, player wins
+        } while(!calculateWinnerOfGame());
     }
 
     private void startRound() {
-        System.out.println("round start. Round " + round + ". With these players: " + activePlayers);
+        System.out.println("------");
+        System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
         int turns = 0;
         while(deck.getNumberOfCards() != 0){
-//            int index = calculateTurn(activePlayers, turns);
-            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
-            startTurn(activePlayers.get(turns % activePlayers.size()));
+//            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
+            takeTurn(activePlayers.get(turns % activePlayers.size()));
             turns++;
         }
-        System.out.println("round ends");
+        System.out.println("End of Round " + round + "!");
         calculateWinnerOfRound();
         calculateWinnerOfGame();
-        round++;
+        System.out.println("the winner is: " + roundWinner.getName() );
 
+        round++;
     }
 
-    private void startTurn(Player player){
-        System.out.println("-- player " + player.getName() + " is taking a turn --");
+    public String printOnlyNames(ArrayList<Player> players){
+        List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
+        String res = "";
+        if (names.size() == 2) {
+            return names.get(0) + " and " + names.get(1);
+        } else if (names.size() == 1) {
+            return names.get(0);
+        } else {
+            for(int i=0; i<names.size() -1; i++){
+                res += names.get(i) + ", ";
+            }
+            res = res.substring(0, res.length() - 2);
+            res += " and " + names.get(names.size() -1);
+        }
+        return res;
+    }
+
+    private void takeTurn(Player player){
+        System.out.println("== " + player.getName() + ", it's your turn! ==");
+        //draw card
         Card drawnCard = deck.getTopCard();
         player.addCardToHand(drawnCard);
-        int chosenCard = chooseCardToPlay(player);
-        applyEffect(player.getHand().get(chosenCard - 1));
+        //update score
+        player.updateScore();
+        System.out.println("SCORE: " + player.getScore());
+        //play card
+        int chosenCard = chooseCardToPlay(player) - 1;
+        applyEffect(player.getHand().get(chosenCard));
+        player.removeCardFromHand(chosenCard);
+        player.updateScore();
     }
 
     private void applyEffect(Card card) {
-        System.out.println("effect has been applied: " + card.getEffect());
+        System.out.println("effect has been applied: " + card.getEffect() + "\n\n");
+
     }
 
     private int chooseCardToPlay(Player player) {
-        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + " first (1) or second (2)");
+        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
     }
 
-    private void calculateWinnerOfGame() {
+    private boolean calculateWinnerOfGame() {
+        return false;
         //if player has enough tokens, player wins
     }
 
@@ -94,6 +123,7 @@ public class Game {
         if(activePlayers.size() > 1){
             Collections.sort(activePlayers, new Player.sortByScore());
         }
+        System.out.println("active players:: " + activePlayers);
         roundWinner = activePlayers.get(0);
         //winner gets token
     }
@@ -113,7 +143,7 @@ public class Game {
             Player player = new Player(name);
             players.add(player);
         }
-        System.out.println(players);
+        System.out.println("Great! Let's start!");
     }
 
 
@@ -148,17 +178,14 @@ public class Game {
     public void printThreeOpenCards(Card[] openCards){
         System.out.println("three open cards");
         for(Card card : openCards){
-            System.out.print(card);
+            System.out.println("* " + card);
         }
     }
 
     public Game(){
         startGame();
-        System.out.println("game");
     }
     public static void main(String[] args) {
-        System.out.println("hallo");
-        System.out.println("pierre");
-        Game game = new Game();
+        new Game();
     }
 }

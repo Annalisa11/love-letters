@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.stream;
+
 public class Game {
 
     private ArrayList<Player> players = new ArrayList<>();
@@ -103,6 +105,10 @@ public class Game {
 
     private void takeTurn(Player player){
         System.out.println("== " + player.getName() + ", it's your turn! ==");
+        if(player.isImmune()){
+            System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
+            player.setImmune();
+        }
         //draw card
         Card drawnCard = deck.getTopCard();
         player.addCardToHand(drawnCard);
@@ -111,56 +117,99 @@ public class Game {
         System.out.println("SCORE: " + player.getScore());
         //play card
         int chosenCard = chooseCardToPlay(player) - 1;
-        applyEffect(player.getHand().get(chosenCard), player.getName());
+        applyEffect(player.getHand().get(chosenCard), player);
         player.removeCardFromHand(chosenCard);
         player.updateScore();
     }
 
-    private void applyEffect(Card card, String currentPlayer) {
+    private void applyEffect(Card card, Player currentPlayer) {
         System.out.println("effect has been applied: " + card.getEffect());
         switch (card.getName()){
             case "Guard":
                 guardEffect(currentPlayer);
             case "Priest":
-                priestEffect(currentPlayer);
+                priestEffect(currentPlayer.getName());
+            case "Baron":
+                baronEffect(currentPlayer);
+            case "Handmaid":
+                handmaidEffect(currentPlayer);
+            case "Prince":
+                princeEffect(currentPlayer);
             default:
                 return;
         }
 
     }
 
-    private void guardEffect(String currentPlayer) {
-        List<Player> otherPlayers = players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to knock out
-        int cardNumber = validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.");
+    private List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
+        return players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to unleash effect upon
+    }
+
+    private int choosePlayerForEffect(List<Player> otherPlayers, String message){
+//        ArrayList<Integer> immunePlayersIndices = IntStream.range(0, otherPlayers.size()).filter(index -> otherPlayers.get(index).isImmune());
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
         String names = "";
         for(int i=1; i<=otherPlayers.size(); i++){
-            names += otherPlayers.get(i-1).getName() + " (" + i + ")  ";
+            names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
         }
-        int playerNumber = validateInputNumbers(numbers, "Choose a player to steel the card from: " + names);
-        Player chosenPlayer = otherPlayers.get(playerNumber-1);
+        numbers = Arrays.stream(numbers).filter(index -> otherPlayers.get(index).isImmune()).toArray(Integer[]::new);
+        return validateInputNumbers(numbers, message + names);
+    }
+
+    private void guardEffect(Player currentPlayer) {
+        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
+        int cardNumber = validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.");
+        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player to potentially knock out: ");
+
+        Player chosenPlayer;
+        if(playerNumber == -1){
+//            chosenPlayer = currentPlayer;
+            System.out.println("you can't choose yourself for guard effect. Effect is not applied");
+            return;
+        } else {
+            chosenPlayer = otherPlayers.get(playerNumber-1);
+        }
 
         if(chosenPlayer.getHand().stream().anyMatch(card -> card.getCloseness() == cardNumber)) {
             System.out.println("You successfully knocked out " + chosenPlayer.getName() + "!");
             activePlayers.remove(chosenPlayer);
+            //to get the right turn again since one is missing for mod function
             turns++;
         } else {
             System.out.println("Unfortunately for you, your chosen player doesn't have your chosen card on their hand. Your Guard has no effect.");
         }
-        //to get the right turn again
     }
 
     private void priestEffect(String currentPlayer){
-        List<Player> otherPlayers = players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to knock out
-        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
-        String names = "";
-        for(int i=1; i<=otherPlayers.size(); i++){
-            names += otherPlayers.get(i-1).getName() + " (" + i + ")  ";
-        }
-        int playerNumber = validateInputNumbers(numbers, "Choose a player whose cards you want to look at: " + names);
+        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer);
+        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
+
         Player chosenPlayer = otherPlayers.get(playerNumber-1);
 
         System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
+    }
+
+    private void baronEffect(Player currentPlayer){
+        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
+        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player to compare hands with: ");
+        Player chosenPlayer = otherPlayers.get(playerNumber-1);
+
+        System.out.println("Alright! The scores are:   You (" + currentPlayer.getScore() + ")   " + chosenPlayer.getName() + " (" + chosenPlayer.getScore() + ")." );
+        ArrayList<Player> winner = new ArrayList<>(Arrays.asList(currentPlayer, chosenPlayer));
+        winner.sort(new Player.sortByScore());
+        Player loser = winner.get(winner.size() -1);
+        System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
+        activePlayers.remove(loser);
+        turns++;
+    }
+
+    private void handmaidEffect(Player currentPlayer){
+        System.out.println("NOTE: You are now immune to other effects for one round.");
+        currentPlayer.setImmune();
+    }
+
+    private void princeEffect(Player currentPlayer){
+
     }
 
     private int chooseCardToPlay(Player player) {
@@ -195,7 +244,7 @@ public class Game {
 
     private void calculateWinnerOfRound() {
         if(activePlayers.size() > 1){
-            Collections.sort(activePlayers, new Player.sortByScore());
+            activePlayers.sort(new Player.sortByScore());
         }
         System.out.println("active players:: " + activePlayers);
         roundWinner = activePlayers.get(0);
@@ -222,11 +271,15 @@ public class Game {
     }
 
 
-    public int validateInputNumbers(Integer[] validValues, String message){
+    public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
+        if(validValues.length == 0){
+            System.out.println("All players are immune. You have to choose yourself.");
+            return -1;
+        }
         Scanner scanner = new Scanner(System.in);
         System.out.println(message);
         int input = scanner.nextInt();
-        while(!Arrays.asList(validValues).contains(input)){
+        while(!Arrays.asList(validValues).contains(input) || Arrays.asList(exceptions).contains(input)){
             System.out.println("invalid input. Try again.");
             input = scanner.nextInt();
         }

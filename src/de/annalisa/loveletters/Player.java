@@ -10,12 +10,22 @@ public class Player {
     private int score;
     private ArrayList<Card> hand;
     private int loveToken;
+    private boolean immune;
 
     public Player(String name){
         this.name = name;
         this.score = 0;
         this.hand = new ArrayList<Card>();
         this.loveToken = 0;
+        this.immune = false;
+    }
+
+    public boolean isImmune() {
+        return immune;
+    }
+
+    public void setImmune() {
+        this.immune = !immune;
     }
 
     public String getName() {

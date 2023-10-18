@@ -1,5 +1,9 @@
 package de.annalisa.loveletters;
 
+import de.annalisa.loveletters.commands.Command;
+import de.annalisa.loveletters.commands.CommandManager;
+import jdk.jshell.spi.ExecutionControl;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,13 +25,15 @@ public class Game {
     private ArrayList<Player> activePlayers = new ArrayList<>();
     private boolean firstRound = true;
     private int turns = 0;
+    public Player currentPlayer;
+    CommandManager commandManager = new CommandManager();
+
 
     private String[] names = {"Prince", "Prince", "King", "Countess", "Princess", "Guard", "Guard", "Guard", "Guard", "Guard", "Priest", "Priest", "Baron", "Baron", "Handmaid", "Handmaid"};
     private int[] closeness = {5, 5, 6, 7, 8, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4};
     private String[] effects = {"Choose any player (including yourself) to discard his or her hand and draw a new card", "Choose any player (including yourself) to discard his or her hand and draw a new card", "Trade hands with another player your choice", "If you have this card and the King or Prince in your hand, you must discard this card.", "If you discard this card, you are out of the round", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Look at another player's hand", "Look at another player's hand", "You and another player secretly compare hands. The player with the lower value is out of the round.", "You and another player secretly compare hands. The player with the lower value is out of the round.", "Until your next turn, ignore all effects from other players' cards.", "Until your next turn, ignore all effects from other players' cards."};
 
     public void startGame(){
-
         createPlayers();
         do {
             //set up game
@@ -53,7 +59,8 @@ public class Game {
             }
 
             //start round
-            activePlayers = players;
+            activePlayers.clear();
+            activePlayers.addAll(players);
             startRound();
             //if player enough tokens, player wins
 
@@ -71,7 +78,8 @@ public class Game {
 
         while(deck.getNumberOfCards() != 0){
 //            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
-            takeTurn(activePlayers.get(turns % activePlayers.size()));
+            currentPlayer = activePlayers.get(turns % activePlayers.size());
+            takeTurn(currentPlayer);
             turns++;
 
             if(activePlayers.size() == 1){
@@ -110,33 +118,28 @@ public class Game {
             player.setImmune();
         }
         //draw card
-        Card drawnCard = deck.getTopCard();
-        player.addCardToHand(drawnCard);
+        if(!(round == 1 && turns == 0)){
+            Card drawnCard = deck.getTopCard();
+            player.addCardToHand(drawnCard);
+        }
         //update score
         player.updateScore();
         System.out.println("SCORE: " + player.getScore());
         //play card
-        int chosenCard = chooseCardToPlay(player) - 1;
-        applyEffect(player.getHand().get(chosenCard), player);
-        player.removeCardFromHand(chosenCard);
-        player.updateScore();
+        waitForInput(this);
     }
 
-    private void applyEffect(Card card, Player currentPlayer) {
+    public void applyEffect(Card card, Player currentPlayer) {
         System.out.println("effect has been applied: " + card.getEffect());
-        switch (card.getName()){
-            case "Guard":
-                guardEffect(currentPlayer);
-            case "Priest":
-                priestEffect(currentPlayer.getName());
-            case "Baron":
-                baronEffect(currentPlayer);
-            case "Handmaid":
-                handmaidEffect(currentPlayer);
-            case "Prince":
-                princeEffect(currentPlayer);
-            default:
+        switch (card.getName()) {
+            case "Guard" -> guardEffect(currentPlayer);
+            case "Priest" -> priestEffect(currentPlayer.getName());
+            case "Baron" -> baronEffect(currentPlayer);
+            case "Handmaid" -> handmaidEffect(currentPlayer);
+            case "Prince" -> princeEffect(currentPlayer);
+            default -> {
                 return;
+            }
         }
 
     }
@@ -152,7 +155,8 @@ public class Game {
         for(int i=1; i<=otherPlayers.size(); i++){
             names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
         }
-        numbers = Arrays.stream(numbers).filter(index -> otherPlayers.get(index).isImmune()).toArray(Integer[]::new);
+        numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
+
         return validateInputNumbers(numbers, message + names);
     }
 
@@ -182,11 +186,14 @@ public class Game {
 
     private void priestEffect(String currentPlayer){
         List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer);
-        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
-
-        Player chosenPlayer = otherPlayers.get(playerNumber-1);
-
-        System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
+        //there is at least one player who isn't immune
+        if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
+            int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
+            Player chosenPlayer = otherPlayers.get(playerNumber-1);
+            System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
+            return;
+        }
+        System.out.println("All players are immune. More luck next time ;)");
     }
 
     private void baronEffect(Player currentPlayer){
@@ -212,7 +219,7 @@ public class Game {
 
     }
 
-    private int chooseCardToPlay(Player player) {
+    public int chooseCardToPlay(Player player) {
         return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
     }
 
@@ -254,7 +261,9 @@ public class Game {
 
     private void allPlayersDrawCard(ArrayList<Player> players) {
         for(Player player : players){
-            player.addCardToHand(deck.getTopCard());
+            for(int i=0; i<2; i++){
+                player.addCardToHand(deck.getTopCard());
+            }
         }
     }
 
@@ -271,10 +280,23 @@ public class Game {
     }
 
 
+    public void waitForInput(Game game){
+        Scanner scanner = new Scanner(System.in);
+        boolean scan = true;
+        while (scan){
+            String input = scanner.nextLine();
+            if (commandManager.isCommand(input)){
+                scan = commandManager.handleInput(input, game); //has to return type of command
+            } else {
+                System.out.println("Input not valid. Try again");
+            }
+        }
+    }
     public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
+
         if(validValues.length == 0){
             System.out.println("All players are immune. You have to choose yourself.");
-            return -1;
+            throw new UnsupportedOperationException();
         }
         Scanner scanner = new Scanner(System.in);
         System.out.println(message);

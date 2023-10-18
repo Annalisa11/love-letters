@@ -1,5 +1,7 @@
 package de.annalisa.loveletters.commands;
 
+import de.annalisa.loveletters.Game;
+
 public interface Command {
     String getCommand();
 
@@ -7,5 +9,5 @@ public interface Command {
 
     String getDescription();
 
-    void execute();
+    boolean execute(Game game);
 }

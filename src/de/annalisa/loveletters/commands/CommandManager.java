@@ -1,5 +1,6 @@
 package de.annalisa.loveletters.commands;
 
+import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.commands.impl.StartCommand;
 import de.annalisa.loveletters.commands.impl.playCardCommand;
 import de.annalisa.loveletters.commands.impl.showHandCommand;
@@ -7,6 +8,7 @@ import de.annalisa.loveletters.commands.impl.showScoreCommand;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CommandManager {
     private List<Command> commands = new ArrayList<>();
@@ -22,9 +24,13 @@ public class CommandManager {
         return input.startsWith("\\");
     }
 
-    public void handleInput(String input){
+    public boolean handleInput(String input, Game game){
         String strippedInput = input.substring(1);
-        commands.stream().filter(command -> command.getCommand().equals(strippedInput)).findFirst().ifPresent(Command::execute);
+        Optional<Command> commandToExecute = commands.stream().filter(command -> command.getCommand().equals(strippedInput)).findFirst();
+        if (commandToExecute.isEmpty()){
+            return true;
+        }
+        return commandToExecute.get().execute(game);
     }
 
 }

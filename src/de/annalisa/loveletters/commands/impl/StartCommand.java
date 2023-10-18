@@ -1,5 +1,6 @@
 package de.annalisa.loveletters.commands.impl;
 
+import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.commands.Command;
 
 public class StartCommand implements Command {
@@ -20,7 +21,8 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public boolean execute(Game game) {
+        throw new UnsupportedOperationException();
 
     }
 }

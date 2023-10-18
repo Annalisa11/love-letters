@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Game {
 
@@ -17,6 +18,7 @@ public class Game {
     private Player gameWinner;
     private ArrayList<Player> activePlayers = new ArrayList<>();
     private boolean firstRound = true;
+    private int turns = 0;
 
     private String[] names = {"Prince", "Prince", "King", "Countess", "Princess", "Guard", "Guard", "Guard", "Guard", "Guard", "Priest", "Priest", "Baron", "Baron", "Handmaid", "Handmaid"};
     private int[] closeness = {5, 5, 6, 7, 8, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4};
@@ -54,17 +56,25 @@ public class Game {
             //if player enough tokens, player wins
 
         } while(!calculateWinnerOfGame());
+
+        System.out.println("\n\n----------------");
+        System.out.println("Congratulations " + gameWinner.getName() + ", you win!");
+        System.out.println("----------------\n\n");
     }
 
     private void startRound() {
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
         System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
-        int turns = 0;
+
         while(deck.getNumberOfCards() != 0){
 //            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
             takeTurn(activePlayers.get(turns % activePlayers.size()));
             turns++;
+
+            if(activePlayers.size() == 1){
+                break;
+            }
         }
         System.out.println("End of Round " + round + "!");
         calculateWinnerOfRound();
@@ -75,7 +85,7 @@ public class Game {
     }
 
     public String printOnlyNames(ArrayList<Player> players){
-        List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
+        List<String> names = players.stream().map(Player::getName).toList();
         String res = "";
         if (names.size() == 2) {
             return names.get(0) + " and " + names.get(1);
@@ -101,14 +111,56 @@ public class Game {
         System.out.println("SCORE: " + player.getScore());
         //play card
         int chosenCard = chooseCardToPlay(player) - 1;
-        applyEffect(player.getHand().get(chosenCard));
+        applyEffect(player.getHand().get(chosenCard), player.getName());
         player.removeCardFromHand(chosenCard);
         player.updateScore();
     }
 
-    private void applyEffect(Card card) {
-        System.out.println("effect has been applied: " + card.getEffect() + "\n\n");
+    private void applyEffect(Card card, String currentPlayer) {
+        System.out.println("effect has been applied: " + card.getEffect());
+        switch (card.getName()){
+            case "Guard":
+                guardEffect(currentPlayer);
+            case "Priest":
+                priestEffect(currentPlayer);
+            default:
+                return;
+        }
 
+    }
+
+    private void guardEffect(String currentPlayer) {
+        List<Player> otherPlayers = players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to knock out
+        int cardNumber = validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.");
+        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
+        String names = "";
+        for(int i=1; i<=otherPlayers.size(); i++){
+            names += otherPlayers.get(i-1).getName() + " (" + i + ")  ";
+        }
+        int playerNumber = validateInputNumbers(numbers, "Choose a player to steel the card from: " + names);
+        Player chosenPlayer = otherPlayers.get(playerNumber-1);
+
+        if(chosenPlayer.getHand().stream().anyMatch(card -> card.getCloseness() == cardNumber)) {
+            System.out.println("You successfully knocked out " + chosenPlayer.getName() + "!");
+            activePlayers.remove(chosenPlayer);
+            turns++;
+        } else {
+            System.out.println("Unfortunately for you, your chosen player doesn't have your chosen card on their hand. Your Guard has no effect.");
+        }
+        //to get the right turn again
+    }
+
+    private void priestEffect(String currentPlayer){
+        List<Player> otherPlayers = players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to knock out
+        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
+        String names = "";
+        for(int i=1; i<=otherPlayers.size(); i++){
+            names += otherPlayers.get(i-1).getName() + " (" + i + ")  ";
+        }
+        int playerNumber = validateInputNumbers(numbers, "Choose a player whose cards you want to look at: " + names);
+        Player chosenPlayer = otherPlayers.get(playerNumber-1);
+
+        System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
     }
 
     private int chooseCardToPlay(Player player) {

@@ -15,6 +15,10 @@ public class Card {
         return effect;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public int getCloseness() {
         return closeness;
     }

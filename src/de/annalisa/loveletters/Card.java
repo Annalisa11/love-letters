@@ -2,15 +2,16 @@ package de.annalisa.loveletters;
 
 public class Card {
     private String name;
-    private int closeness;
     private String effect;
+    private int closeness;
 
     public Card(String name, int closeness, String effect){
         this.name = name;
-        this.closeness = closeness;
         this.effect = effect;
+        this.closeness = closeness;
     }
 
+    //Getters
     public String getEffect() {
         return effect;
     }

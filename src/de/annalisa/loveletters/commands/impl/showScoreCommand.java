@@ -23,8 +23,7 @@ public class showScoreCommand implements Command {
     @Override
     public boolean execute(Game game) {
         Player player = game.currentPlayer;
-        System.out.println("SCORE: ");
-        System.out.println(player.getScore());
+        System.out.println("SCORE: " + player.getScore());
         return true;
     }
 

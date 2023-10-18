@@ -1,37 +1,34 @@
 package de.annalisa.loveletters;
 
-import de.annalisa.loveletters.commands.Command;
 import de.annalisa.loveletters.commands.CommandManager;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.Arrays.stream;
-
 public class Game {
-
-    private ArrayList<Player> players = new ArrayList<>();
     private Deck deck;
     private int round = 1;
+    private int turns = 0;
     private Card firstCardOfDeck;
     private Card[] threeOpenCards = new Card[3];
+    public Player currentPlayer;
     private Player roundWinner;
     private Player gameWinner;
+    private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Player> activePlayers = new ArrayList<>();
-    private boolean firstRound = true;
-    private int turns = 0;
-    public Player currentPlayer;
-    CommandManager commandManager = new CommandManager();
+    private CommandManager commandManager = new CommandManager();
 
-
+    //Data to create cards
     private String[] names = {"Prince", "Prince", "King", "Countess", "Princess", "Guard", "Guard", "Guard", "Guard", "Guard", "Priest", "Priest", "Baron", "Baron", "Handmaid", "Handmaid"};
     private int[] closeness = {5, 5, 6, 7, 8, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4};
     private String[] effects = {"Choose any player (including yourself) to discard his or her hand and draw a new card", "Choose any player (including yourself) to discard his or her hand and draw a new card", "Trade hands with another player your choice", "If you have this card and the King or Prince in your hand, you must discard this card.", "If you discard this card, you are out of the round", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Look at another player's hand", "Look at another player's hand", "You and another player secretly compare hands. The player with the lower value is out of the round.", "You and another player secretly compare hands. The player with the lower value is out of the round.", "Until your next turn, ignore all effects from other players' cards.", "Until your next turn, ignore all effects from other players' cards."};
+
+    //constructors
+    public Game(){
+        startGame();
+    }
 
     public void startGame(){
         createPlayers();
@@ -52,17 +49,13 @@ public class Game {
             }
             System.out.println("-------\n\n");
 
-
             //set up players
             allPlayersDrawCard(players);
-
-
-            //start round
             activePlayers.clear();
             activePlayers.addAll(players);
-            startRound();
-            //if player enough tokens, player wins
 
+            //start round
+            startRound();
         } while(!calculateWinnerOfGame());
 
         System.out.println("\n\n----------------");
@@ -76,7 +69,6 @@ public class Game {
         System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
 
         while(deck.getNumberOfCards() != 0){
-//            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
             currentPlayer = activePlayers.get(turns % activePlayers.size());
             takeTurn(currentPlayer);
             turns++;
@@ -89,12 +81,34 @@ public class Game {
         calculateWinnerOfRound();
         calculateWinnerOfGame();
         System.out.println("the winner is: " + roundWinner.getName() );
+        //reset stats for next round
         players.forEach(Player::clearHand);
         players.forEach(Player::resetTurn);
 
         round++;
     }
 
+    private void takeTurn(Player player){
+        System.out.println("== " + player.getName() + ", it's your turn! ==");
+        if(player.isImmune()){
+            System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
+            player.setImmune();
+        }
+        //draw card
+        if(!(player.getTurn() == 1)){
+            Card drawnCard = deck.getTopCard();
+            player.addCardToHand(drawnCard);
+        }
+        //update score
+        player.updateScore();
+        System.out.println("SCORE: " + player.getScore());
+        //update turn
+        player.incrementTurn();
+        //play card
+        waitForInput(this);
+    }
+
+    //formatting helper functions
     public String printOnlyNames(ArrayList<Player> players){
         List<String> names = players.stream().map(Player::getName).toList();
         String res = "";
@@ -112,26 +126,81 @@ public class Game {
         return res;
     }
 
-    private void takeTurn(Player player){
-        System.out.println("== " + player.getName() + ", it's your turn! ==");
-        if(player.isImmune()){
-            System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
-            player.setImmune();
+    public void printThreeOpenCards(Card[] openCards){
+        System.out.println("three open cards");
+        for(Card card : openCards){
+            System.out.println("* " + card);
         }
-        //draw card
-        if(!(player.getTurn() == 1)){
-            Card drawnCard = deck.getTopCard();
-            player.addCardToHand(drawnCard);
-        }
-        //update score
-        player.updateScore();
-        System.out.println("SCORE: " + player.getScore());
-        // update turn
-        player.incrementTurn();
-        //play card
-        waitForInput(this);
     }
 
+    //other helper functions
+    private List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
+        return players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to unleash effect upon
+    }
+
+    private int choosePlayerForEffect(List<Player> otherPlayers, String message){
+        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
+        String names = "";
+        for(int i=1; i<=otherPlayers.size(); i++){
+            names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
+        }
+        numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
+
+        return validateInputNumbers(numbers, message + names);
+    }
+
+    private void knockOutPlayer(Player player){
+        activePlayers.remove(player);
+        turns++;
+    }
+
+    private void allPlayersDrawCard(ArrayList<Player> players) {
+        for(Player player : players){
+            for(int i=0; i<2; i++){
+                player.addCardToHand(deck.getTopCard());
+            }
+            player.updateScore();
+        }
+    }
+
+    private void createPlayers() {
+        int numberOfPlayers;
+        numberOfPlayers = validateInputNumbers(new Integer[]{2,3,4}, "With how many players do you want to play? (2,3,4)");
+        for(int i = 0; i < numberOfPlayers; i++){
+            System.out.println("What should player " + (i+1) + " be called?");
+            String name = getStringFromConsole();
+            Player player = new Player(name);
+            players.add(player);
+        }
+        System.out.println("Great! Let's start!");
+    }
+
+    private void shuffleDeck() {
+        deck.shuffleDeck();
+    }
+
+    private void createDeck() {
+        deck = new Deck(16);
+        for (int i = 0 ; i < deck.getDeckSize(); i++){
+            Card card = new Card(names[i], closeness[i], effects[i]);
+            deck.addCard(card);
+        }
+    }
+
+    public int getIndexOfCardInHand(Player player, int closeness){
+        return IntStream.range(0, player.getHand().size())
+                .filter(i -> player.getHand().get(i).getCloseness() != closeness).findFirst().orElse(-1);
+    }
+
+    public boolean isSpecificCardOnHand(Player player, int closeness){
+        return player.getHand().stream().anyMatch(card -> card.getCloseness() == closeness);
+    }
+
+    public int chooseCardToPlay(Player player) {
+        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
+    }
+
+    //effect functions
     public void applyEffect(Card card, Player currentPlayer) {
         System.out.println("effect has been applied: " + card.getEffect());
         switch (card.getName()) {
@@ -147,23 +216,6 @@ public class Game {
                 return;
             }
         }
-
-    }
-
-    private List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
-        return players.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to unleash effect upon
-    }
-
-    private int choosePlayerForEffect(List<Player> otherPlayers, String message){
-//        ArrayList<Integer> immunePlayersIndices = IntStream.range(0, otherPlayers.size()).filter(index -> otherPlayers.get(index).isImmune());
-        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
-        String names = "";
-        for(int i=1; i<=otherPlayers.size(); i++){
-            names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
-        }
-        numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
-
-        return validateInputNumbers(numbers, message + names);
     }
 
     private void guardEffect(Player currentPlayer) {
@@ -213,11 +265,6 @@ public class Game {
         knockOutPlayer(loser);
     }
 
-    private void knockOutPlayer(Player player){
-        activePlayers.remove(player);
-        turns++;
-    }
-
     private void handmaidEffect(Player currentPlayer){
         System.out.println("NOTE: You are now immune to other effects for one round.");
         currentPlayer.setImmune();
@@ -227,22 +274,13 @@ public class Game {
 
     }
 
-    private void countessEffect(){
-        System.out.println("You have discarded the countess...");
-    }
-
-    public int getIndexOfCardInHand(Player player, int closeness){
-        return IntStream.range(0, player.getHand().size())
-                .filter(i -> player.getHand().get(i).getCloseness() != closeness).findFirst().orElse(-1);
-    }
-
-    public boolean isSpecificCardOnHand(Player player, int closeness){
-        return player.getHand().stream().anyMatch(card -> card.getCloseness() == closeness);
-    }
-
     private void princessEffect(Player currentPlayer){
         System.out.println("You discarded the Princess? HOW DARE YOU!?");
         knockOutPlayer(currentPlayer);
+    }
+
+    private void countessEffect(){
+        System.out.println("You have discarded the countess...");
     }
 
     private void kingEffect(Player currentPlayer){
@@ -262,19 +300,8 @@ public class Game {
         System.out.println("You have successfully swapped cards!");
     }
 
-    public int chooseCardToPlay(Player player) {
-        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
-    }
 
-    private boolean calculateWinnerOfGame() {
-        return switch (players.size()) {
-            case 2 -> decideWinner(7);
-            case 3 -> decideWinner(5);
-            case 4 -> decideWinner(4);
-            default -> false;
-        };
-    }
-
+    //winning helper functions
     private boolean decideWinner(int neededTokens){
         List<Player> winners = players.stream().filter(player -> player.getLoveToken() == neededTokens).toList();
         if(winners.isEmpty()){
@@ -292,6 +319,15 @@ public class Game {
         }
     }
 
+    private boolean calculateWinnerOfGame() {
+        return switch (players.size()) {
+            case 2 -> decideWinner(7);
+            case 3 -> decideWinner(5);
+            case 4 -> decideWinner(4);
+            default -> false;
+        };
+    }
+
     private void calculateWinnerOfRound() {
         if(activePlayers.size() > 1){
             activePlayers.sort(new Player.sortByScore());
@@ -302,28 +338,8 @@ public class Game {
         //winner gets token
     }
 
-    private void allPlayersDrawCard(ArrayList<Player> players) {
-        for(Player player : players){
-            for(int i=0; i<2; i++){
-                player.addCardToHand(deck.getTopCard());
-            }
-            player.updateScore();
-        }
-    }
 
-    private void createPlayers() {
-        int numberOfPlayers;
-        numberOfPlayers = validateInputNumbers(new Integer[]{2,3,4}, "With how many players do you want to play? (2,3,4)");
-        for(int i = 0; i < numberOfPlayers; i++){
-            System.out.println("What should player " + (i+1) + " be called?");
-            String name = getStringFromConsole();
-            Player player = new Player(name);
-            players.add(player);
-        }
-        System.out.println("Great! Let's start!");
-    }
-
-
+    //input helper functions
     public void waitForInput(Game game){
         Scanner scanner = new Scanner(System.in);
         boolean scan = true;
@@ -336,6 +352,7 @@ public class Game {
             }
         }
     }
+
     public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
 
         if(validValues.length == 0){
@@ -357,28 +374,6 @@ public class Game {
         return scanner.nextLine();
     }
 
-    private void shuffleDeck() {
-        deck.shuffleDeck();
-    }
-
-    private void createDeck() {
-        deck = new Deck(16);
-        for (int i = 0 ; i < deck.getDeckSize(); i++){
-            Card card = new Card(names[i], closeness[i], effects[i]);
-            deck.addCard(card);
-        }
-    }
-
-    public void printThreeOpenCards(Card[] openCards){
-        System.out.println("three open cards");
-        for(Card card : openCards){
-            System.out.println("* " + card);
-        }
-    }
-
-    public Game(){
-        startGame();
-    }
     public static void main(String[] args) {
         new Game();
     }

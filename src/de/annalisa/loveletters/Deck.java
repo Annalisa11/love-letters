@@ -1,23 +1,22 @@
 package de.annalisa.loveletters;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class Deck {
+    private final int DECK_SIZE;
     private Random random = new Random();
     private ArrayList<Card> cards;
     private int numberOfCards;
-    private final int DECK_SIZE;
 
 
     public Deck(int deckSize){
-        this.cards = new ArrayList<Card>();
         this.DECK_SIZE = deckSize;
+        this.cards = new ArrayList<Card>();
         this.numberOfCards = 0;
     }
 
+    //Getters
     public int getDeckSize() {
         return DECK_SIZE;
     }
@@ -26,13 +25,19 @@ public class Deck {
         return numberOfCards;
     }
 
+    public Card getTopCard(){
+        Card topCard = cards.get(cards.size()-1);
+        cards.remove((cards.size()-1));
+        numberOfCards--;
+        return topCard;
+    }
+
     public void addCard(Card card){
         cards.add(card);
         numberOfCards++;
     }
 
     public void shuffleDeck(){
-//        Collections.shuffle(cards);
         ArrayList<Card> unshuffled = new ArrayList<>(cards);
         ArrayList<Card> shuffled = new ArrayList<>();
         while(!unshuffled.isEmpty()){
@@ -42,21 +47,13 @@ public class Deck {
         }
         this.cards = shuffled;
     }
-    
-
-    public Card getTopCard(){
-        Card topCard = cards.get(cards.size()-1);
-        cards.remove((cards.size()-1));
-        numberOfCards--;
-        return topCard;
-    }
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for(Card card: cards){
-            result += card;
+            result.append(card);
         }
-        return result;
+        return result.toString();
     }
 }

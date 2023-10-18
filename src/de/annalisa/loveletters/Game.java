@@ -140,6 +140,9 @@ public class Game {
             case "Baron" -> baronEffect(currentPlayer);
             case "Handmaid" -> handmaidEffect(currentPlayer);
             case "Prince" -> princeEffect(currentPlayer);
+            case "Princess" -> princessEffect(currentPlayer);
+            case "King" -> kingEffect(currentPlayer);
+            case "Countess" -> countessEffect();
             default -> {
                 return;
             }
@@ -179,9 +182,7 @@ public class Game {
 
         if(chosenPlayer.getHand().stream().anyMatch(card -> card.getCloseness() == cardNumber)) {
             System.out.println("You successfully knocked out " + chosenPlayer.getName() + "!");
-            activePlayers.remove(chosenPlayer);
-            //to get the right turn again since one is missing for mod function
-            turns++;
+            knockOutPlayer(chosenPlayer);
         } else {
             System.out.println("Unfortunately for you, your chosen player doesn't have your chosen card on their hand. Your Guard has no effect.");
         }
@@ -209,7 +210,11 @@ public class Game {
         winner.sort(new Player.sortByScore());
         Player loser = winner.get(winner.size() -1);
         System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
-        activePlayers.remove(loser);
+        knockOutPlayer(loser);
+    }
+
+    private void knockOutPlayer(Player player){
+        activePlayers.remove(player);
         turns++;
     }
 
@@ -220,6 +225,41 @@ public class Game {
 
     private void princeEffect(Player currentPlayer){
 
+    }
+
+    private void countessEffect(){
+        System.out.println("You have discarded the countess...");
+    }
+
+    public int getIndexOfCardInHand(Player player, int closeness){
+        return IntStream.range(0, player.getHand().size())
+                .filter(i -> player.getHand().get(i).getCloseness() != closeness).findFirst().orElse(-1);
+    }
+
+    public boolean isSpecificCardOnHand(Player player, int closeness){
+        return player.getHand().stream().anyMatch(card -> card.getCloseness() == closeness);
+    }
+
+    private void princessEffect(Player currentPlayer){
+        System.out.println("You discarded the Princess? HOW DARE YOU!?");
+        knockOutPlayer(currentPlayer);
+    }
+
+    private void kingEffect(Player currentPlayer){
+        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
+        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player swap your card with: ");
+        Player chosenPlayer = otherPlayers.get(playerNumber-1);
+
+        //get Cards to swap
+        Card otherPlayersCard = chosenPlayer.getHand().get(0);
+        int yourCardIndex = getIndexOfCardInHand(currentPlayer, 6);
+
+        Card yourCard = currentPlayer.getHand().get(yourCardIndex);
+
+        //set the Cards in each others hands
+        chosenPlayer.getHand().set(0, yourCard);
+        currentPlayer.getHand().set(yourCardIndex, otherPlayersCard);
+        System.out.println("You have successfully swapped cards!");
     }
 
     public int chooseCardToPlay(Player player) {
@@ -268,7 +308,6 @@ public class Game {
                 player.addCardToHand(deck.getTopCard());
             }
             player.updateScore();
-            System.out.println("SCOOOOOOORE" + player.getScore());
         }
     }
 

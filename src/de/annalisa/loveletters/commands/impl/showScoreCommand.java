@@ -1,6 +1,7 @@
 package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
+import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
 public class showScoreCommand implements Command {
@@ -21,8 +22,10 @@ public class showScoreCommand implements Command {
 
     @Override
     public boolean execute(Game game) {
-        throw new UnsupportedOperationException();
-
+        Player player = game.currentPlayer;
+        System.out.println("SCORE: ");
+        System.out.println(player.getScore());
+        return true;
     }
 
 

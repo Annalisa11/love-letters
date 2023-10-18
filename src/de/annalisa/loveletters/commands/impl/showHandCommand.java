@@ -1,12 +1,13 @@
 package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
+import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
 public class showHandCommand implements Command {
     @Override
     public String getCommand() {
-        return "showCard";
+        return "showHand";
     }
 
     @Override
@@ -21,7 +22,10 @@ public class showHandCommand implements Command {
 
     @Override
     public boolean execute(Game game) {
-        throw new UnsupportedOperationException();
+        Player player = game.currentPlayer;
+        System.out.println("You have these cards on your hand:");
+        System.out.println(player.getHand());
+        return true;
     }
 
 

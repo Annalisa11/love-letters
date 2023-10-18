@@ -52,11 +52,10 @@ public class Game {
             }
             System.out.println("-------\n\n");
 
-            if(firstRound){
-                //set up players
-                allPlayersDrawCard(players);
-                firstRound = false;
-            }
+
+            //set up players
+            allPlayersDrawCard(players);
+
 
             //start round
             activePlayers.clear();
@@ -90,6 +89,8 @@ public class Game {
         calculateWinnerOfRound();
         calculateWinnerOfGame();
         System.out.println("the winner is: " + roundWinner.getName() );
+        players.forEach(Player::clearHand);
+        players.forEach(Player::resetTurn);
 
         round++;
     }
@@ -118,13 +119,15 @@ public class Game {
             player.setImmune();
         }
         //draw card
-        if(!(round == 1 && turns == 0)){
+        if(!(player.getTurn() == 1)){
             Card drawnCard = deck.getTopCard();
             player.addCardToHand(drawnCard);
         }
         //update score
         player.updateScore();
         System.out.println("SCORE: " + player.getScore());
+        // update turn
+        player.incrementTurn();
         //play card
         waitForInput(this);
     }
@@ -264,6 +267,8 @@ public class Game {
             for(int i=0; i<2; i++){
                 player.addCardToHand(deck.getTopCard());
             }
+            player.updateScore();
+            System.out.println("SCOOOOOOORE" + player.getScore());
         }
     }
 

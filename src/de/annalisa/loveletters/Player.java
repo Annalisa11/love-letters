@@ -11,6 +11,7 @@ public class Player {
     private ArrayList<Card> hand;
     private int loveToken;
     private boolean immune;
+    private int turn;
 
     public Player(String name){
         this.name = name;
@@ -18,6 +19,18 @@ public class Player {
         this.hand = new ArrayList<Card>();
         this.loveToken = 0;
         this.immune = false;
+        this.turn = 1;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public void resetTurn() {
+        this.turn = 1;
+    }
+    public void incrementTurn() {
+        this.turn++;
     }
 
     public boolean isImmune() {
@@ -64,6 +77,10 @@ public class Player {
 
     public int getScore(){
         return score;
+    }
+
+    public void clearHand() {
+        hand.clear();
     }
 
     static class sortByScore implements Comparator<Player> {

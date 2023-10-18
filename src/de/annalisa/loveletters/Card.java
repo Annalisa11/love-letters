@@ -11,6 +11,11 @@ public class Card {
         this.effect = effect;
     }
 
+    public String getEffect() {
+        return effect;
+    }
+
+    @Override
     public String toString(){
         return "[ " + name + " - " + closeness + " - " + effect + " ]\n";
     }

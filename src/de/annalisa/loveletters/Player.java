@@ -9,15 +9,25 @@ public class Player {
     private String name;
     private int score;
     private ArrayList<Card> hand;
+    private int loveToken;
 
     public Player(String name){
         this.name = name;
         this.score = 0;
         this.hand = new ArrayList<Card>();
+        this.loveToken = 0;
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getLoveToken() {
+        return loveToken;
+    }
+
+    public void addLoveToken(int loveToken) {
+        this.loveToken += loveToken;
     }
 
     public void addCardToHand(Card card){

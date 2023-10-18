@@ -59,6 +59,7 @@ public class Game {
     private void startRound() {
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
+        System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
         int turns = 0;
         while(deck.getNumberOfCards() != 0){
 //            System.out.println("TURN " + turns + "--------------  mod: " + (turns % activePlayers.size()) + " remaining cards: " + deck.getNumberOfCards());
@@ -115,8 +116,29 @@ public class Game {
     }
 
     private boolean calculateWinnerOfGame() {
-        return false;
-        //if player has enough tokens, player wins
+        return switch (players.size()) {
+            case 2 -> decideWinner(7);
+            case 3 -> decideWinner(5);
+            case 4 -> decideWinner(4);
+            default -> false;
+        };
+    }
+
+    private boolean decideWinner(int neededTokens){
+        List<Player> winners = players.stream().filter(player -> player.getLoveToken() == neededTokens).toList();
+        if(winners.isEmpty()){
+            return false;
+        }else if (winners.size() == 1) {
+            gameWinner = winners.get(0);
+            return true;
+        }
+        else {
+            int index;
+            System.out.println("There is a tie! Who went most recently on a date?");
+            index = validateInputNumbers(new Integer[]{1,2}, winners.get(0) + "(1) or " + winners.get(1) + "(2)");
+            gameWinner = winners.get(index);
+            return true;
+        }
     }
 
     private void calculateWinnerOfRound() {
@@ -125,6 +147,7 @@ public class Game {
         }
         System.out.println("active players:: " + activePlayers);
         roundWinner = activePlayers.get(0);
+        roundWinner.addLoveToken(1);
         //winner gets token
     }
 

@@ -28,11 +28,6 @@ public class playCardCommand implements Command {
         }
         Player player = game.currentPlayer;
         int chosenCard;
-        System.out.println("BOOLEAN COUNTESS on hand?: " + (game.isSpecificCardOnHand(player, 7)));
-        System.out.println("BOOLEAN KING on hand?: " + (game.isSpecificCardOnHand(player, 6)));
-        System.out.println("BOOLEAN PRINCE on hand?: " + (game.isSpecificCardOnHand(player, 5)));
-        System.out.println("BOOLEAN COUNTESS king or prince on hand?: " + ( (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5))));
-        System.out.println("BOOLEAN COUNTESS both:" + (game.isSpecificCardOnHand(player, 7) && (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5))));
         if(game.isSpecificCardOnHand(player, 7) && (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5)) ){
             System.out.println("The Countess doesn't want to be near the king or the prince.. you have to discard her!");
             chosenCard = game.getIndexOfCardInHand(player, 7);

@@ -77,10 +77,14 @@ public class Game {
             }
             System.out.println("-------\n\n");
 
+
+
             //set up players
-            allPlayersDrawCard(players);
+            //sort all players for next round
             activePlayers.clear();
             activePlayers.addAll(players);
+
+            allPlayersDrawCard(activePlayers);
 
             //start round
             startRound();
@@ -97,7 +101,16 @@ public class Game {
         System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
 
         while(deck.getNumberOfCards() != 0){
-            currentPlayer = activePlayers.get(turns % activePlayers.size());
+            if(turns > activePlayers.size()-1){
+                turns = 0;
+            }
+            if (roundWinner != null){
+                currentPlayer = roundWinner;
+                turns = activePlayers.indexOf(roundWinner);
+            } else {
+                currentPlayer = activePlayers.get(turns);
+            }
+
             takeTurn(currentPlayer);
             turns++;
 
@@ -117,7 +130,7 @@ public class Game {
     }
 
     private void takeTurn(Player player){
-        System.out.println("== " + player.getName() + ", it's your turn! ==");
+        System.out.println("\n== " + player.getName() + ", it's your turn! ==");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
         if(player.isImmune()){
             System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
@@ -150,7 +163,7 @@ public class Game {
         } else if (names.size() == 1) {
             return names.get(0);
         } else {
-            for(int i=0; i<names.size() -1; i++){
+            for(int i=0; i<(names.size()-1); i++){
                 res += names.get(i) + ", ";
             }
             res = res.substring(0, res.length() - 2);
@@ -168,7 +181,7 @@ public class Game {
 
     //other helper functions
     private List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
-        return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates to unleash effect upon
+        return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates
     }
 
     private int choosePlayerForEffect(List<Player> otherPlayers, String message){
@@ -182,9 +195,13 @@ public class Game {
         return validateInputNumbers(numbers, message + names);
     }
 
-    private void knockOutPlayer(Player player){
+    private void knockOutPlayer(Player player, Player currentPlayer){
+        int indexOfPlayer = activePlayers.indexOf(player);
+        int indexOfCurrentPlayer = activePlayers.indexOf(currentPlayer);
+        if(indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer !=( activePlayers.size()-1)){
+            turns--;
+        }
         activePlayers.remove(player);
-        turns++;
     }
 
     private void allPlayersDrawCard(ArrayList<Player> players) {
@@ -268,7 +285,7 @@ public class Game {
 
         if(chosenPlayer.getHand().stream().anyMatch(card -> card.getCloseness() == cardNumber)) {
             System.out.println("You successfully knocked out " + chosenPlayer.getName() + "!");
-            knockOutPlayer(chosenPlayer);
+            knockOutPlayer(chosenPlayer, currentPlayer);
         } else {
             System.out.println("Unfortunately for you, your chosen player doesn't have your chosen card on their hand. Your Guard has no effect.");
         }
@@ -304,7 +321,7 @@ public class Game {
         winner.sort(new Player.sortByScore());
         Player loser = winner.get(winner.size() -1);
         System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
-        knockOutPlayer(loser);
+        knockOutPlayer(loser, currentPlayer);
     }
 
     private void handmaidEffect(Player currentPlayer){
@@ -325,7 +342,7 @@ public class Game {
                 chosenPlayer = currentPlayer;
                 System.out.println("you have to choose yourself");
             } else {
-                chosenPlayer = otherPlayers.get(playerNumber-1);
+                chosenPlayer = allPlayers.get(playerNumber-1);
             }
             System.out.println("Discard card and draw new one: " + chosenPlayer);
 
@@ -336,7 +353,7 @@ public class Game {
 
             Card removedCard = hand.get(cardToDropIndex);
             if(removedCard.getCloseness() == 8){
-                knockOutPlayer(chosenPlayer);
+                knockOutPlayer(chosenPlayer, currentPlayer);
                 System.out.println(chosenPlayer + " had to discard the Princess... what a shame, he or she is knocked out!");
                 return;
             }
@@ -350,7 +367,7 @@ public class Game {
 
     private void princessEffect(Player currentPlayer){
         System.out.println("You discarded the Princess? HOW DARE YOU!?");
-        knockOutPlayer(currentPlayer);
+        knockOutPlayer(currentPlayer, currentPlayer);
     }
 
     private void countessEffect(){
@@ -415,8 +432,9 @@ public class Game {
         }
         System.out.println("active players:: " + activePlayers);
         roundWinner = activePlayers.get(0);
-        roundWinner.addLoveToken(1);
+
         //winner gets token
+        roundWinner.addLoveToken(1);
     }
 
 

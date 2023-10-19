@@ -56,6 +56,7 @@ public class Game {
     }
 
     public void startGame(){
+        commandManager.setInGame(true);
         System.out.println("Before we start with the game, let's define the players.");
         createPlayers();
         do {

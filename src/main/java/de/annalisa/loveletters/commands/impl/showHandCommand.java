@@ -21,7 +21,11 @@ public class showHandCommand implements Command {
     }
 
     @Override
-    public boolean execute(Game game) {
+    public boolean execute(Game game, boolean inGame) {
+        if(!inGame){
+            System.out.println("you have to start the game to view your cards");
+            return true;
+        }
         Player player = game.currentPlayer;
         System.out.println("You have these cards on your hand:");
         System.out.println(player.getHand());

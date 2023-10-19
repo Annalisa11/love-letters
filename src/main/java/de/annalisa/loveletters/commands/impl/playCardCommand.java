@@ -21,7 +21,11 @@ public class playCardCommand implements Command {
     }
 
     @Override
-    public boolean execute(Game game) {
+    public boolean execute(Game game, boolean inGame) {
+        if(!inGame){
+            System.out.println("you have to start the game to play a card");
+            return true;
+        }
         Player player = game.currentPlayer;
         int chosenCard;
         System.out.println("BOOLEAN COUNTESS on hand?: " + (game.isSpecificCardOnHand(player, 7)));

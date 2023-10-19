@@ -5,6 +5,7 @@ import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
 public class showScoreCommand implements Command {
+
     @Override
     public String getCommand() {
         return "showScore";
@@ -21,7 +22,11 @@ public class showScoreCommand implements Command {
     }
 
     @Override
-    public boolean execute(Game game) {
+    public boolean execute(Game game, boolean inGame) {
+        if(!inGame){
+            System.out.println("you have to start the game to see your score");
+            return true;
+        }
         Player player = game.currentPlayer;
         System.out.println("SCORE: " + player.getScore());
         return true;

@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Deck {
-    private final int DECK_SIZE;
+    private final int deckSize;
     private Random random = new Random();
     private ArrayList<Card> cards;
     private int numberOfCards;
 
 
     public Deck(int deckSize){
-        this.DECK_SIZE = deckSize;
+        this.deckSize = deckSize;
         this.cards = new ArrayList<Card>();
         this.numberOfCards = 0;
     }
 
     //Getters
     public int getDeckSize() {
-        return DECK_SIZE;
+        return deckSize;
     }
 
     public int getNumberOfCards() {
@@ -26,10 +26,18 @@ public class Deck {
     }
 
     public Card getTopCard(){
+
         Card topCard = cards.get(cards.size()-1);
         cards.remove((cards.size()-1));
         numberOfCards--;
         return topCard;
+    }
+
+    public Card getTopCardWithSpecialFallback(Card firstCard){
+        if(cards.isEmpty()){
+            return firstCard;
+        }
+        return getTopCard();
     }
 
     public void addCard(Card card){

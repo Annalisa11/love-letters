@@ -21,7 +21,11 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public boolean execute(Game game) {
+    public boolean execute(Game game, boolean inGame) {
+        if(inGame){
+            System.out.println("you have to end the program and start again to start a new game.");
+            return true;
+        }
         game.startGame();
         return false;
     }

@@ -10,6 +10,8 @@ import java.util.Optional;
 public class CommandManager {
     private List<Command> commands = new ArrayList<>();
 
+    private boolean inGame = false;
+
     public CommandManager(){
         this.commands.add(new StartCommand());
         this.commands.add(new playCardCommand());
@@ -22,6 +24,10 @@ public class CommandManager {
         return commands;
     }
 
+    public void setInGame(boolean value) {
+        inGame = value;
+    }
+
     public boolean isCommand(String input){
         return input.startsWith("\\");
     }
@@ -32,7 +38,7 @@ public class CommandManager {
         if (commandToExecute.isEmpty()){
             return true;
         }
-        return commandToExecute.get().execute(game);
+        return commandToExecute.get().execute(game, inGame);
     }
 
 }

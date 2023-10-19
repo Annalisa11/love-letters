@@ -9,5 +9,5 @@ public interface Command {
 
     String getDescription();
 
-    boolean execute(Game game);
+    boolean execute(Game game, boolean inGame);
 }

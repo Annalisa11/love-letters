@@ -38,6 +38,10 @@ public class Game {
         return deck;
     }
 
+    public Card getFirstCardOfDeck(){
+        return firstCardOfDeck;
+    }
+
     public Game(){
         displayIntroduction();
         waitForInput(this);
@@ -311,8 +315,8 @@ public class Game {
         List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
         List<Player> allPlayers = activePlayers;
         //there is at least one player who isn't immune
-        if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
-            int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player who has to discard and draw a new card: ");
+        if (allPlayers.stream().anyMatch(player -> !player.isImmune())){
+            int playerNumber = choosePlayerForEffect(allPlayers, "Choose a player who has to discard and draw a new card: ");
 //            Player chosenPlayer = allPlayers.get(playerNumber-1);
 
             Player chosenPlayer;
@@ -330,8 +334,13 @@ public class Game {
             int cardToDropIndex = validateInputNumbers(numbers, "Which card should be discarded? \n(if you choose for yourself, please do not choose the prince, since you are playing the card right now ;)") -1;
 
             Card removedCard = hand.get(cardToDropIndex);
+            if(removedCard.getCloseness() == 8){
+                knockOutPlayer(chosenPlayer);
+                System.out.println(chosenPlayer + " had to discard the Princess... what a shame, he or she is knocked out!");
+                return;
+            }
             hand.remove(cardToDropIndex);
-            Card drawnCard = deck.getTopCard();
+            Card drawnCard = deck.getTopCardWithSpecialFallback(firstCardOfDeck);
             chosenPlayer.addCardToHand(drawnCard);
 
             System.out.println(chosenPlayer.getName() + " has discarded the card " + removedCard.getName() + " and drawn a new one.");

@@ -22,7 +22,7 @@ public class helpCommand implements Command {
     }
 
     @Override
-    public boolean execute(Game game) {
+    public boolean execute(Game game, boolean inGame) {
         System.out.println("You can use these commands:");
         List<Command> commands = game.getCommandManager().getCommands();
         for(Command command : commands){

@@ -17,7 +17,7 @@ public class showHandCommand implements Command {
 
     @Override
     public String getDescription() {
-        return null;
+        return "With showHand you can see which cards you have on your hand without having to do play one or do anything else. Only valid when playing the game.";
     }
 
     @Override

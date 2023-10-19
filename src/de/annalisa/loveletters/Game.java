@@ -25,12 +25,17 @@ public class Game {
     private int[] closeness = {5, 5, 6, 7, 8, 1, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4};
     private String[] effects = {"Choose any player (including yourself) to discard his or her hand and draw a new card", "Choose any player (including yourself) to discard his or her hand and draw a new card", "Trade hands with another player your choice", "If you have this card and the King or Prince in your hand, you must discard this card.", "If you discard this card, you are out of the round", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Look at another player's hand", "Look at another player's hand", "You and another player secretly compare hands. The player with the lower value is out of the round.", "You and another player secretly compare hands. The player with the lower value is out of the round.", "Until your next turn, ignore all effects from other players' cards.", "Until your next turn, ignore all effects from other players' cards."};
 
-    //constructors
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
     public Game(){
-        startGame();
+        displayIntroduction();
+        waitForInput(this);
     }
 
     public void startGame(){
+        System.out.println("Before we start with the game, let's define the players.");
         createPlayers();
         do {
             //set up game
@@ -109,6 +114,10 @@ public class Game {
     }
 
     //formatting helper functions
+    private void displayIntroduction(){
+        System.out.println("%c Welcome to LOVE LETTERS!");
+        System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
+    }
     public String printOnlyNames(ArrayList<Player> players){
         List<String> names = players.stream().map(Player::getName).toList();
         String res = "";
@@ -346,7 +355,7 @@ public class Game {
         while (scan){
             String input = scanner.nextLine();
             if (commandManager.isCommand(input)){
-                scan = commandManager.handleInput(input, game); //has to return type of command
+                scan = commandManager.handleInput(input, game);
             } else {
                 System.out.println("Input not valid. Try again");
             }

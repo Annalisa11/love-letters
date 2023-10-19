@@ -17,12 +17,12 @@ public class StartCommand implements Command {
 
     @Override
     public String getDescription() {
-        return null;
+        return "With start you can start the game. Have fun!";
     }
 
     @Override
     public boolean execute(Game game) {
-        throw new UnsupportedOperationException();
-
+        game.startGame();
+        return false;
     }
 }

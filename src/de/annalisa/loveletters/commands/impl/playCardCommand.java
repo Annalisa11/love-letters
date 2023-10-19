@@ -17,7 +17,7 @@ public class playCardCommand implements Command {
 
     @Override
     public String getDescription() {
-        return null;
+        return "With playCard you can play a card that you have on your hand. Only valid when playing the game.";
     }
 
     @Override

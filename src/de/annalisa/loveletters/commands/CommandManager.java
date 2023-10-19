@@ -1,10 +1,7 @@
 package de.annalisa.loveletters.commands;
 
 import de.annalisa.loveletters.Game;
-import de.annalisa.loveletters.commands.impl.StartCommand;
-import de.annalisa.loveletters.commands.impl.playCardCommand;
-import de.annalisa.loveletters.commands.impl.showHandCommand;
-import de.annalisa.loveletters.commands.impl.showScoreCommand;
+import de.annalisa.loveletters.commands.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +15,11 @@ public class CommandManager {
         this.commands.add(new playCardCommand());
         this.commands.add(new showHandCommand());
         this.commands.add(new showScoreCommand());
+        this.commands.add(new helpCommand());
+    }
+
+    public List<Command> getCommands() {
+        return commands;
     }
 
     public boolean isCommand(String input){

@@ -17,7 +17,7 @@ public class showScoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return null;
+        return "With showScore you can view your personal score, i.e. the sum of your card's closeness values. Only valid when playing the game.";
     }
 
     @Override

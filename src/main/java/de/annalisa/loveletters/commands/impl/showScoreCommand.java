@@ -27,7 +27,7 @@ public class showScoreCommand implements Command {
             System.out.println("you have to start the game to see your score");
             return true;
         }
-        Player player = game.currentPlayer;
+        Player player = game.getCurrentPlayer();
         System.out.println("SCORE: " + player.getScore());
         return true;
     }

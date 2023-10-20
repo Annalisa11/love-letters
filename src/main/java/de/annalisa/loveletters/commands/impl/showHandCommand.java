@@ -26,7 +26,7 @@ public class showHandCommand implements Command {
             System.out.println("you have to start the game to view your cards");
             return true;
         }
-        Player player = game.currentPlayer;
+        Player player = game.getCurrentPlayer();
         System.out.println("You have these cards on your hand:");
         System.out.println(player.getHand());
         return true;

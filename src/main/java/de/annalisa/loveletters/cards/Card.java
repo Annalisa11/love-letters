@@ -1,6 +1,8 @@
-package de.annalisa.loveletters;
+package de.annalisa.loveletters.cards;
 
-public class Card {
+import de.annalisa.loveletters.Game;
+
+public abstract class Card {
     private String name;
     private String effect;
     private int closeness;
@@ -12,7 +14,9 @@ public class Card {
     }
 
     //Getters
-    public String getEffect() {
+    public abstract void applyEffect(Game game);
+
+    public String getEffect(){
         return effect;
     }
 

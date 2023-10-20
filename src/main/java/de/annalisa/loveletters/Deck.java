@@ -1,5 +1,7 @@
 package de.annalisa.loveletters;
 
+import de.annalisa.loveletters.cards.Card;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,6 +45,12 @@ public class Deck {
     public void addCard(Card card){
         cards.add(card);
         numberOfCards++;
+    }
+
+    public void addSameCardNTimes(Card card, int n){
+        for (int i=0; i<n; i++){
+            addCard(card);
+        }
     }
 
     public void shuffleDeck(){

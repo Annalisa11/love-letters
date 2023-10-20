@@ -1,6 +1,6 @@
 package de.annalisa.loveletters;
 
-import static org.junit.jupiter.api.Assertions.*;
+import de.annalisa.loveletters.cards.Card;
 import org.junit.jupiter.api.*;
 
 class GameTest {

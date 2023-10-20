@@ -1,5 +1,7 @@
 package de.annalisa.loveletters;
 
+import de.annalisa.loveletters.cards.Card;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -85,7 +87,7 @@ public class Player {
     }
 
     //Comparators
-    static class sortByScore implements Comparator<Player> {
+    public static class sortByScore implements Comparator<Player> {
         public int compare(Player p1, Player p2){
             return p2.score - p1.score;
         }

@@ -1,11 +1,13 @@
 package de.annalisa.loveletters;
 
+import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.CommandManager;
 
 import java.util.ArrayList;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import de.annalisa.loveletters.cards.*;
 
 public class Game {
     private Deck deck;
@@ -14,17 +16,12 @@ public class Game {
     private int effectID;
     private Card firstCardOfDeck;
     private Card[] threeOpenCards = new Card[3];
-    public Player currentPlayer;
+    private Player currentPlayer;
     private Player roundWinner;
     private Player gameWinner;
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Player> activePlayers = new ArrayList<>();
     private CommandManager commandManager = new CommandManager();
-
-    //Data to create cards
-    private String[] names = {"Guard", "Prince", "Countess", "King", "Princess", "Guard", "Prince", "Guard", "Guard", "Guard", "Priest", "Priest", "Baron", "Baron", "Handmaid", "Handmaid"};
-    private int[] closeness = {1, 5, 7, 6, 8, 1, 5, 1, 1, 1, 2, 2, 3, 3, 4, 4};
-    private String[] effects = {"Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Choose any player (including yourself) to discard his or her hand and draw a new card",  "If you have this card and the King or Prince in your hand, you must discard this card.", "Trade hands with another player your choice", "If you discard this card, you are out of the round", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Choose any player (including yourself) to discard his or her hand and draw a new card", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.", "Look at another player's hand", "Look at another player's hand", "You and another player secretly compare hands. The player with the lower value is out of the round.", "You and another player secretly compare hands. The player with the lower value is out of the round.", "Until your next turn, ignore all effects from other players' cards.", "Until your next turn, ignore all effects from other players' cards."};
 
     public CommandManager getCommandManager() {
         return commandManager;
@@ -42,17 +39,21 @@ public class Game {
         return firstCardOfDeck;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public ArrayList<Player> getActivePlayers() {
+        return activePlayers;
+    }
+
     public Game(){
         displayIntroduction();
         waitForInput(this);
     }
 
-    public int getEffectID() {
-        return effectID;
-    }
-
-    public void setEffectID(int effectID) {
-        this.effectID = effectID;
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public void startGame(){
@@ -180,11 +181,11 @@ public class Game {
     }
 
     //other helper functions
-    private List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
+    public List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
         return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates
     }
 
-    private int choosePlayerForEffect(List<Player> otherPlayers, String message){
+    public int choosePlayerForEffect(List<Player> otherPlayers, String message){
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
         String names = "";
         for(int i=1; i<=otherPlayers.size(); i++){
@@ -195,7 +196,7 @@ public class Game {
         return validateInputNumbers(numbers, message + names);
     }
 
-    private void knockOutPlayer(Player player, Player currentPlayer){
+    public void knockOutPlayer(Player player, Player currentPlayer){
         int indexOfPlayer = activePlayers.indexOf(player);
         int indexOfCurrentPlayer = activePlayers.indexOf(currentPlayer);
         if(indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer !=( activePlayers.size()-1)){
@@ -231,10 +232,14 @@ public class Game {
 
     void createDeck() {
         deck = new Deck(16);
-        for (int i = 0 ; i < deck.getDeckSize(); i++){
-            Card card = new Card(names[i], closeness[i], effects[i]);
-            deck.addCard(card);
-        }
+        deck.addCard(new Princess());
+        deck.addCard(new Countess());
+        deck.addCard(new King());
+        deck.addSameCardNTimes(new Guard(), 5);
+        deck.addSameCardNTimes(new Prince(), 2);
+        deck.addSameCardNTimes(new Priest(), 2);
+        deck.addSameCardNTimes(new Baron(), 2);
+        deck.addSameCardNTimes(new Handmaid(), 2);
     }
 
     public int getIndexOfCardInHand(Player player, int closeness){
@@ -249,155 +254,6 @@ public class Game {
     public int chooseCardToPlay(Player player) {
         return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
     }
-
-    //effect functions
-    public void applyEffect(Card card, Player currentPlayer) {
-        System.out.println("effect has been applied: " + card.getEffect());
-        effectID = card.getCloseness();
-        switch (card.getName()) {
-            case "Guard" -> guardEffect(currentPlayer);
-            case "Priest" -> priestEffect(currentPlayer.getName());
-            case "Baron" -> baronEffect(currentPlayer);
-            case "Handmaid" -> handmaidEffect(currentPlayer);
-            case "Prince" -> princeEffect(currentPlayer);
-            case "Princess" -> princessEffect(currentPlayer);
-            case "King" -> kingEffect(currentPlayer);
-            case "Countess" -> countessEffect();
-            default -> {
-                return;
-            }
-        }
-    }
-
-    private void guardEffect(Player currentPlayer) {
-        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
-        int cardNumber = validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.");
-        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player to potentially knock out: ");
-
-        Player chosenPlayer;
-        if(playerNumber == -1){
-//            chosenPlayer = currentPlayer;
-            System.out.println("you can't choose yourself for guard effect. Effect is not applied");
-            return;
-        } else {
-            chosenPlayer = otherPlayers.get(playerNumber-1);
-        }
-
-        if(chosenPlayer.getHand().stream().anyMatch(card -> card.getCloseness() == cardNumber)) {
-            System.out.println("You successfully knocked out " + chosenPlayer.getName() + "!");
-            knockOutPlayer(chosenPlayer, currentPlayer);
-        } else {
-            System.out.println("Unfortunately for you, your chosen player doesn't have your chosen card on their hand. Your Guard has no effect.");
-        }
-    }
-
-    private void priestEffect(String currentPlayer){
-        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer);
-        //there is at least one player who isn't immune
-        if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
-            int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
-            Player chosenPlayer = otherPlayers.get(playerNumber-1);
-            System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
-            return;
-        }
-        System.out.println("All players are immune. More luck next time ;)");
-    }
-
-    private void baronEffect(Player currentPlayer){
-        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
-        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player to compare hands with: ");
-
-        Player chosenPlayer;
-        if(playerNumber == -1){
-//            chosenPlayer = currentPlayer;
-            System.out.println("you can't choose yourself for baron effect. Effect is not applied");
-            return;
-        } else {
-            chosenPlayer = otherPlayers.get(playerNumber-1);
-        }
-
-        System.out.println("Alright! The scores are:   You (" + currentPlayer.getScore() + ")   " + chosenPlayer.getName() + " (" + chosenPlayer.getScore() + ")." );
-        ArrayList<Player> winner = new ArrayList<>(Arrays.asList(currentPlayer, chosenPlayer));
-        winner.sort(new Player.sortByScore());
-        Player loser = winner.get(winner.size() -1);
-        System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
-        knockOutPlayer(loser, currentPlayer);
-    }
-
-    private void handmaidEffect(Player currentPlayer){
-        System.out.println("NOTE: You are now immune to other effects for one round.");
-        currentPlayer.setImmune();
-    }
-
-    private void princeEffect(Player currentPlayer){
-        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
-        List<Player> allPlayers = activePlayers;
-        //there is at least one player who isn't immune
-        if (allPlayers.stream().anyMatch(player -> !player.isImmune())){
-            int playerNumber = choosePlayerForEffect(allPlayers, "Choose a player who has to discard and draw a new card: ");
-//            Player chosenPlayer = allPlayers.get(playerNumber-1);
-
-            Player chosenPlayer;
-            if(playerNumber == -1){
-                chosenPlayer = currentPlayer;
-                System.out.println("you have to choose yourself");
-            } else {
-                chosenPlayer = allPlayers.get(playerNumber-1);
-            }
-            System.out.println("Discard card and draw new one: " + chosenPlayer);
-
-            //effect logic
-            List<Card> hand = chosenPlayer.getHand();
-            Integer[] numbers = IntStream.rangeClosed(1, hand.size()).boxed().toArray(Integer[]::new);
-            int cardToDropIndex = validateInputNumbers(numbers, "Which card should be discarded? \n(if you choose for yourself, please do not choose the prince, since you are playing the card right now ;)") -1;
-
-            Card removedCard = hand.get(cardToDropIndex);
-            if(removedCard.getCloseness() == 8){
-                knockOutPlayer(chosenPlayer, currentPlayer);
-                System.out.println(chosenPlayer + " had to discard the Princess... what a shame, he or she is knocked out!");
-                return;
-            }
-            hand.remove(cardToDropIndex);
-            Card drawnCard = deck.getTopCardWithSpecialFallback(firstCardOfDeck);
-            chosenPlayer.addCardToHand(drawnCard);
-
-            System.out.println(chosenPlayer.getName() + " has discarded the card " + removedCard.getName() + " and drawn a new one.");
-        }
-    }
-
-    private void princessEffect(Player currentPlayer){
-        System.out.println("You discarded the Princess? HOW DARE YOU!?");
-        knockOutPlayer(currentPlayer, currentPlayer);
-    }
-
-    private void countessEffect(){
-        System.out.println("You have discarded the countess...");
-    }
-
-    private void kingEffect(Player currentPlayer){
-        List<Player> otherPlayers = getOtherPlayersExcludingCurrent(currentPlayer.getName());
-        int playerNumber = choosePlayerForEffect(otherPlayers, "Choose a player swap your card with: ");
-
-        Player chosenPlayer;
-        if(playerNumber == -1){
-            System.out.println("Effect is not applied");
-            return;
-        } else {
-            chosenPlayer = otherPlayers.get(playerNumber-1);
-        }
-
-        //get Cards to swap
-        Card otherPlayersCard = chosenPlayer.getHand().get(0);
-        int yourCardIndex = getIndexOfCardInHand(currentPlayer, 6);
-
-        Card yourCard = currentPlayer.getHand().get(yourCardIndex);
-
-        //set the Cards in each others hands
-        chosenPlayer.getHand().set(0, yourCard);
-        currentPlayer.getHand().set(yourCardIndex, otherPlayersCard);
-        System.out.println("You have successfully swapped cards!");
-    }
-
 
     //winning helper functions
     private boolean decideWinner(int neededTokens){

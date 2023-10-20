@@ -26,7 +26,7 @@ public class playCardCommand implements Command {
             System.out.println("you have to start the game to play a card");
             return true;
         }
-        Player player = game.currentPlayer;
+        Player player = game.getCurrentPlayer();
         int chosenCard;
         if(game.isSpecificCardOnHand(player, 7) && (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5)) ){
             System.out.println("The Countess doesn't want to be near the king or the prince.. you have to discard her!");
@@ -34,7 +34,7 @@ public class playCardCommand implements Command {
         } else {
             chosenCard = game.chooseCardToPlay(player) - 1;
         }
-        game.applyEffect(player.getHand().get(chosenCard), player);
+        player.getHand().get(chosenCard).applyEffect(game);
         player.removeCardFromHand(chosenCard);
         player.updateScore();
         return false;

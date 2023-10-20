@@ -5,14 +5,14 @@ A project developed during the course SEP (Softwareentwicklungspraktikum) at the
 
 ## Table of contents
 
-- [Game](#game)
+- [Game](#-game)
   - [Rules](#rules)
-- [Features and Specifications](#features-and-specifications)
+- [Features and Specifications](#-features-and-specifications)
   - [Mandatory Features](#mandatory-features)
   - [Additional Features](#additional-features)
-- [How to run it](#how-to-run-it)
-- [UML diagram](#uml-diagram)
-- [Author](#author)
+- [How to run it](#-how-to-run-it)
+- [UML diagram](#-uml-diagram)
+- [Author](#-author)
 
 ## 💌 Game
 ### Rules
@@ -44,10 +44,6 @@ Once you finish applying the card's effect, the turn passes to the player on you
 #### Out of the Round
 
 If a player is knocked out of the round, that player discards the card in his or her hand face up (do not apply the card's effect) and takes no more turns until next round.
-
-#### Honesty
-
-A player could cheat when chosen with the Guard, or fail to discard the Countess when that player has the King or Prince in hand. We suggest that you don't play with knaves who cheat at fun, light games.
 
 
 #### End of a Round

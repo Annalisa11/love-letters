@@ -63,7 +63,6 @@ public class Game {
         do {
             //set up game
             createDeck();
-            System.out.println(deck);
             shuffleDeck();
 
             //set up deck/cards
@@ -78,13 +77,9 @@ public class Game {
             }
             System.out.println("-------\n\n");
 
-
-
             //set up players
-            //sort all players for next round
             activePlayers.clear();
             activePlayers.addAll(players);
-
             allPlayersDrawCard(activePlayers);
 
             //start round
@@ -97,7 +92,6 @@ public class Game {
     }
 
     private void startRound() {
-        //TODO: bug: when playing next round (2+) only first player can play
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
         System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
@@ -109,6 +103,7 @@ public class Game {
             if (roundWinner != null){
                 currentPlayer = roundWinner;
                 turns = activePlayers.indexOf(roundWinner);
+                roundWinner = null;
             } else {
                 currentPlayer = activePlayers.get(turns);
             }
@@ -287,13 +282,11 @@ public class Game {
         if(activePlayers.size() > 1){
             activePlayers.sort(new Player.sortByScore());
         }
-        System.out.println("active players:: " + activePlayers);
         roundWinner = activePlayers.get(0);
 
         //winner gets token
         roundWinner.addLoveToken(1);
     }
-
 
     //input helper functions
     public void waitForInput(Game game){

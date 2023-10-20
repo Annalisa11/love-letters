@@ -20,7 +20,6 @@ public class Baron extends Card{
 
         Player chosenPlayer;
         if(playerNumber == -1){
-//            chosenPlayer = currentPlayer;
             System.out.println("you can't choose yourself for baron effect. Effect is not applied");
             return;
         } else {
@@ -30,6 +29,7 @@ public class Baron extends Card{
         System.out.println("Alright! The scores are:   You (" + currentPlayer.getScore() + ")   " + chosenPlayer.getName() + " (" + chosenPlayer.getScore() + ")." );
         ArrayList<Player> winner = new ArrayList<>(Arrays.asList(currentPlayer, chosenPlayer));
         winner.sort(new Player.sortByScore());
+        //TODO: What happens when there is a tie?
         Player loser = winner.get(winner.size() -1);
         System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
         game.knockOutPlayer(loser, currentPlayer);

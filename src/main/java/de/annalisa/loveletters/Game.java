@@ -97,6 +97,7 @@ public class Game {
     }
 
     private void startRound() {
+        //TODO: bug: when playing next round (2+) only first player can play
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
         System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
@@ -153,7 +154,7 @@ public class Game {
 
     //formatting helper functions
     private void displayIntroduction(){
-        System.out.println("%c Welcome to LOVE LETTERS!");
+        System.out.println("Welcome to LOVE LETTER!");
         System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
     }
     public String printOnlyNames(ArrayList<Player> players){

@@ -313,9 +313,9 @@ public class Game {
         //All players immune
         if(validValues.length == 0){
             System.out.println("All players are immune.");
-            if (effectID == 5){
+            if (effectID == 5){             //TODO: add update of effectID before (or after?) the applyEffect()
                 System.out.println("You have to choose yourself.");
-                return 200;
+                return 200;                 //TODO: check for code 200 or change this implementation to something else
             }
             System.out.println("Effect is not applied.");
             return -1;
@@ -323,13 +323,22 @@ public class Game {
 
         //You can choose player
         Scanner scanner = new Scanner(System.in);
-        System.out.println(message);
-        int input = scanner.nextInt();
-        while(!Arrays.asList(validValues).contains(input) || Arrays.asList(exceptions).contains(input)){
-            System.out.println("invalid input. Try again.");
-            input = scanner.nextInt();
+        int input;
+        while(true){
+            System.out.println(message);
+            String inputString = scanner.nextLine();
+            try{
+                input = Integer.parseInt(inputString);
+
+                if(!Arrays.asList(validValues).contains(input) || Arrays.asList(exceptions).contains(input)){
+                    System.out.println("invalid input. Try again.");
+                    continue;
+                }
+                return input;
+            } catch (Exception e){
+                System.out.println("Please enter a number.");
+            }
         }
-        return input;
     }
 
     public String getStringFromConsole(){

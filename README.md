@@ -1,92 +1,113 @@
 # Love Letters
 
+Welcome to my implementation of the card game Love Letter by Seiji Kanai.
+A project developed during the course SEP (Softwareentwicklungspraktikum) at the LMU.
+
+## Table of contents
+
+- [Game](#game)
+  - [Rules](#rules)
+- [Features and Specifications](#features-and-specifications)
+  - [Mandatory Features](#mandatory-features)
+  - [Additional Features](#additional-features)
+- [How to run it](#how-to-run-it)
+- [UML diagram](#uml-diagram)
+- [Author](#author)
+
+## 💌 Game
+### Rules
+#### Game Components
+
+- 16 game cards
+- tokens of affection
+
+#### Setup
+
+Shuffle the 16 cards to form a face-down draw deck. Remove the top card of the deck from the game without looking at it.
+
+If you are playing a two-player game, take three more cards from the top of the deck and place them to the side, face up. They will not be used during this round.
+
+Each player draws one card from the deck. This is the player's hand, and is kept secret from the others.
+
+#### Object of the Game
+
+In the wake of the arrest of Queen Marianna for high treason, none was more heartbroken than her daughter, Princess Annette. Suitors throughout the City-State of Tempest sought to ease Annette's sorrow by courting her to bring some joy into her life.
+
+You are one of these suitors, trying to get your love letter to the princess. Unfortunately, she has locked herself in the palace, so you must rely on intermediaries to carry your message.
+
+During the game, you hold one secret card in your hand. This is who currently carries your message of love for the princess.
+
+Make sure that the person closest to the princess holds your love letter at the end of the day, so it reaches her first!
+
+#### Game Play
+
+Love Letter is played in a series of rounds. Each round represents one day. At the end of each round, one player's letter reaches Princess Annette, and she reads it.
+
+When she reads enough letters from one suitor, she becomes enamored and grants that suitor permission to court her. That player wins the princess's heart and the game.
+
+#### Taking a Turn
+
+On your turn, draw the top card from the deck and add it to your hand. Then choose one of the two cards in your hand and discard it face up in front of you. Apply any effect on the card you discarded. You must apply its effect, even if it is bad for you.
+
+All discarded cards remain in front of the player who discarded them. Overlap the cards so that it's clear in which order they were discarded. This helps players to figure out which cards other players might be holding.
+
+Once you finish applying the card's effect, the turn passes to the player on your left.
+
+#### Out of the Round
+
+If a player is knocked out of the round, that player discards the card in his or her hand face up (do not apply the card's effect) and takes no more turns until next round.
+
+#### Honesty
+
+A player could cheat when chosen with the Guard, or fail to discard the Countess when that player has the King or Prince in hand. We suggest that you don't play with knaves who cheat at fun, light games.
 
 
-## Getting started
+#### End of a Round
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+A round ends if the deck is empty at the end of a turn. The royal residence closes for the evening, the person closest to the princess delivers the love letter, and Princess Annette retires to her chambers to read it.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+All players still in the round reveal their hands. The player with the highest ranked person wins the round. In case of a tie, the player who discarded the highest total value of cards wins.
 
-## Add your files
+A round also ends if all players but one are out of the round, in which case the remaining player wins.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+The winner receives a token of affection. Shuffle all 16 cards together, and play a new round following all of the setup rules.
 
-```
-cd existing_repo
-git remote add origin https://gitlab2.cip.ifi.lmu.de/comin/love-letters.git
-git branch -M main
-git push -uf origin main
-```
+The winner of the previous round goes first, because the princess speaks kindly of him or her at breakfast.
 
-## Integrate with your tools
+#### End of the game
 
-- [ ] [Set up project integrations](https://gitlab2.cip.ifi.lmu.de/comin/love-letters/-/settings/integrations)
+A player wins the game after winning a number of tokens based on the number of players:
 
-## Collaborate with your team
+- 2 players - 7 tokens
+- 3 players - 5 tokens
+- 4 players - 4 tokens
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-## Test and Deploy
+## 📋 Features and specifications 
 
-Use the built-in continuous integration in GitLab.
+### Mandatory features
+- Various **commands** have to be implemented.   
+    (help, start, showHand, showScore, playCard)
+- Users have to be able to choose the **number of players**
+### Additional features
+- ~~Other Commands~~
+- ~~Colorful Console Output~~
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 🚀 How to run it 
 
-***
+**Prerequisites:** you have to have Java installed on your computer (developed in Java 19).
 
-# Editing this README
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 📉 UML diagram 
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Here you can see the most recent UML diagram for my code. 
 
-## Name
-Choose a self-explaining name for your project.
+![UML diagram](src/main/resources/UML-diagrams/UML-diagram_03.png "UML diagram")
+You can also check out [previous versions](src/main/resources/UML-diagrams) of the diagram.  
+_(src/main/resources/UML-diagrams)_
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 👩‍💻 Author 
+Annalisa Comin
+- [GitHub](https://github.com/Annalisa11)
+- [Instagram](https://www.instagram.com/annalisa_comin/)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.

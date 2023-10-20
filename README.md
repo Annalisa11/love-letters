@@ -16,18 +16,6 @@ A project developed during the course SEP (Softwareentwicklungspraktikum) at the
 
 ## 💌 Game
 ### Rules
-#### Game Components
-
-- 16 game cards
-- tokens of affection
-
-#### Setup
-
-Shuffle the 16 cards to form a face-down draw deck. Remove the top card of the deck from the game without looking at it.
-
-If you are playing a two-player game, take three more cards from the top of the deck and place them to the side, face up. They will not be used during this round.
-
-Each player draws one card from the deck. This is the player's hand, and is kept secret from the others.
 
 #### Object of the Game
 

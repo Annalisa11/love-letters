@@ -1,6 +1,6 @@
 # Love Letters
 
-Welcome to my implementation of the card game Love Letter by Seiji Kanai.
+Welcome to my implementation of the card game Love Letter by Seiji Kanai.  
 A project developed during the course SEP (Softwareentwicklungspraktikum) at the LMU.
 
 ## Table of contents
@@ -17,7 +17,7 @@ A project developed during the course SEP (Softwareentwicklungspraktikum) at the
 ## 💌 Game
 ### Rules
 
-#### Object of the Game
+#### Objective of the Game
 
 In the wake of the arrest of Queen Marianna for high treason, none was more heartbroken than her daughter, Princess Annette. Suitors throughout the City-State of Tempest sought to ease Annette's sorrow by courting her to bring some joy into her life.
 
@@ -79,8 +79,16 @@ A player wins the game after winning a number of tokens based on the number of p
 
 ## 🚀 How to run it 
 
-**Prerequisites:** you have to have Java installed on your computer (developed in Java 19).
+>**Prerequisites:**  
+>you have to have Java installed on your computer (developed in Java 19).
 
+1. Go to the [out folder](src/out/artifacts), then in artifacts and download the `.jar` file.   
+2. Go to the location where you saved the file on your computer and open the terminal.  
+3. Paste this command into the terminal and press enter.
+```bash
+java -jar LoveLetters.jar
+```
+The game should start now... enjoy :)
 
 ## 📉 UML diagram 
 

@@ -82,7 +82,7 @@ A player wins the game after winning a number of tokens based on the number of p
 >**Prerequisites:**  
 >you have to have Java installed on your computer (developed in Java 19).
 
-1. Go to the [out folder](src/out/artifacts), then in artifacts and download the `.jar` file.   
+1. Go to the [artifacts folder](out/artifacts) _(out/artifacts)_ and download the `.jar` file.   
 2. Go to the location where you saved the file on your computer and open the terminal.  
 3. Paste this command into the terminal and press enter.
 ```bash

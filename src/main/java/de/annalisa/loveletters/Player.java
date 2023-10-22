@@ -86,6 +86,8 @@ public class Player {
         score = res;
     }
 
+    //TODO: maybe implement an equals functions? To compare players?
+
     //Comparators
     public static class sortByScore implements Comparator<Player> {
         public int compare(Player p1, Player p2){

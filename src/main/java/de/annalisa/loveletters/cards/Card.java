@@ -28,6 +28,8 @@ public abstract class Card {
         return closeness;
     }
 
+    //TODO: maybe implement an equals functions? To compare cards?
+
     @Override
     public String toString(){
         return "[ " + name + " - " + closeness + " - " + effect + " ]";

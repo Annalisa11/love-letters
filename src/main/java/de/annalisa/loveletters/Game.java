@@ -153,6 +153,7 @@ public class Game {
         System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
     }
     public String printOnlyNames(ArrayList<Player> players){
+        //TODO: use a string builder? Make it more elegant...
         List<String> names = players.stream().map(Player::getName).toList();
         String res = "";
         if (names.size() == 2) {
@@ -181,6 +182,13 @@ public class Game {
         return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates
     }
 
+    /**
+     * Prompts the current player to choose a player for a game effect from a list of eligible players.
+     *
+     * @param otherPlayers A list of players from which the current player can choose.
+     * @param message      The message displayed to instruct the player's choice.
+     * @return The index of the chosen player in the 'otherPlayers' list.
+     */
     public int choosePlayerForEffect(List<Player> otherPlayers, String message){
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
         String names = "";
@@ -225,6 +233,7 @@ public class Game {
     private void shuffleDeck() {
         deck.shuffleDeck();
     }
+    //TODO: get rid of shuffleDeck. Just use deck.schuffleDeck
 
     void createDeck() {
         deck = new Deck(16);
@@ -289,6 +298,12 @@ public class Game {
     }
 
     //input helper functions
+    /**
+     * Continuously waits for user input and processes it as a command. <br/>
+     * This method is suitable for situations where user input is not required for specific numeric values, and the user is free to choose from a list of available commands.
+     *
+     * @param game The current game instance that will handle the commands.
+     */
     public void waitForInput(Game game){
         Scanner scanner = new Scanner(System.in);
         boolean scan = true;
@@ -302,6 +317,17 @@ public class Game {
         }
     }
 
+    /**
+     * Validates and retrieves an integer input from the user within a specified set of valid values.
+     * This method prompts the user for input and ensures that the input is an integer within the valid values.
+     * If the input is not a valid integer or is outside the specified valid values, the user will be prompted to try again.
+     *
+     * @param validValues An array of valid integer values that the user's input can match.
+     * @param message     The prompt message displayed to the user.
+     * @param exceptions  An optional array of values that are considered exceptions and will not be treated as valid.
+     * @return The validated integer input provided by the user.
+     * @throws InputMismatchException If the user enters a non-integer value.
+     */
     public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
 
         //All players immune

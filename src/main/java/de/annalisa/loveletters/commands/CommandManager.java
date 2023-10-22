@@ -51,6 +51,7 @@ public class CommandManager {
             return true;
         }
         return commandToExecute.get().execute(game, inGame);
+        //TODO: when entering invalid command you have to press enter once again because there is a random empty line
     }
 
 }

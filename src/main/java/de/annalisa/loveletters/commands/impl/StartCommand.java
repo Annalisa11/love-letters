@@ -20,6 +20,7 @@ public class StartCommand implements Command {
         return "With start you can start the game. Have fun!";
     }
 
+    //TODO: maybe make it abstract? So that if(inGame) is not implemented every time
     @Override
     public boolean execute(Game game, boolean inGame) {
         if(inGame){

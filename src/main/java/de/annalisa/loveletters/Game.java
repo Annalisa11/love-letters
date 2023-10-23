@@ -74,6 +74,7 @@ public class Game {
                     threeOpenCards.add(deck.getTopCard());
                 }
                 printThreeOpenCards(threeOpenCards);
+                //TODO: reset open cards.. in round two there were 6
             }
             System.out.println("-------\n\n");
 
@@ -91,6 +92,7 @@ public class Game {
         System.out.println("----------------\n\n");
     }
 
+    //TODO: refactor so that activeplayers is boolean attribute in every player?
     private void startRound() {
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));

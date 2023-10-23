@@ -18,6 +18,7 @@ public class CommandManager {
         this.commands.add(new showHandCommand());
         this.commands.add(new showScoreCommand());
         this.commands.add(new helpCommand());
+        this.commands.add(new showPlayersCommand());
         //TODO: add an exit and/or retry command?
     }
 

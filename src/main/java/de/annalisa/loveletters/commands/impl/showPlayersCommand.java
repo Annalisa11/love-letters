@@ -4,13 +4,10 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
-import java.util.stream.Collectors;
-
-public class showScoreCommand implements Command {
-
+public class showPlayersCommand implements Command {
     @Override
     public String getCommand() {
-        return "showScore";
+        return "showPlayers";
     }
 
     @Override
@@ -20,18 +17,19 @@ public class showScoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With showScore you can view the number of tokens of all players. Only valid when playing the game.";
+        return "With showPlayers you can see every player's names and if they are still active or have been knocked out in the current round.";
     }
 
     @Override
     public boolean execute(Game game, boolean inGame) {
         if(!inGame){
-            System.out.println("you have start the game to view all players' scores.");
+            System.out.println("you have start the game to see the players.");
             return true;
         }
-        System.out.println("TOKENS: " + game.getPlayers().stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
+
+        for(Player player: game.getPlayers()){
+            System.out.println(player.getName() + " " + (game.getActivePlayers().contains(player) ? "(active)" : "(knocked out)" + "\n"));
+        }
         return true;
     }
-
-
 }

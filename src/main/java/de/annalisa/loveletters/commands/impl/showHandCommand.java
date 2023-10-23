@@ -2,6 +2,7 @@ package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
+import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
 
 public class showHandCommand implements Command {
@@ -28,7 +29,7 @@ public class showHandCommand implements Command {
         }
         Player player = game.getCurrentPlayer();
         System.out.println("You have these cards on your hand:");
-        System.out.println(player.getHand());
+        System.out.println(Card.printCardsBesideEachOther(player.getHand()));
         return true;
     }
 

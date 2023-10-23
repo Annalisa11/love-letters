@@ -15,7 +15,7 @@ public class Game {
     private int turns = 0;
     private int effectID;
     private Card firstCardOfDeck;
-    private Card[] threeOpenCards = new Card[3];
+    private ArrayList<Card> threeOpenCards = new ArrayList<>(3);
     private Player currentPlayer;
     private Player roundWinner;
     private Player gameWinner;
@@ -68,10 +68,10 @@ public class Game {
             //set up deck/cards
             System.out.println("\n-------");
             firstCardOfDeck = deck.getTopCard();
-            System.out.println("first card: " + firstCardOfDeck); // remove later, first card should not be visible
+            System.out.println("first card: \n" + firstCardOfDeck); // remove later, first card should not be visible
             if(players.size() == 2){
                 for(int i=0; i < 3; i++){
-                    threeOpenCards[i] = deck.getTopCard();
+                    threeOpenCards.add(deck.getTopCard());
                 }
                 printThreeOpenCards(threeOpenCards);
             }
@@ -170,11 +170,9 @@ public class Game {
         return res;
     }
 
-    public void printThreeOpenCards(Card[] openCards){
+    public void printThreeOpenCards(ArrayList<Card> openCards){
         System.out.println("three open cards");
-        for(Card card : openCards){
-            System.out.println("* " + card);
-        }
+        System.out.println(Card.printCardsBesideEachOther(openCards));
     }
 
     //other helper functions
@@ -257,7 +255,7 @@ public class Game {
     }
 
     public int chooseCardToPlay(Player player) {
-        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + player.cardsOnHand() + "first (1) or second (2)");
+        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + Card.printCardsBesideEachOther(player.getHand()) + "first (1) or second (2)");
     }
 
     //winning helper functions

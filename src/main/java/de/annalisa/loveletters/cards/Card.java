@@ -71,24 +71,42 @@ public abstract class Card {
         return splits.toArray(new String[0]);
     }
 
+    /**
+     * Combines multiple cards into a single string so that multiple cards can be displayed side by side.
+     *
+     * @param cards An arrayList of Card objects to display next to each other.
+     * @return A string ready to print to the console containing the cards displayed beside each other.
+     */
+    public static String printCardsBesideEachOther(ArrayList<Card> cards) {
+        StringBuilder string = new StringBuilder();
+        int maxLines = cards.get(0).toString().split("\n").length; //get the amount of lines of a card
+        for (int i = 0; i < maxLines; i++) {
+            for (Card card : cards) {
+                string.append(card.toString().split("\n")[i]).append("  ");
+            }
+            string.append("\n");
+        }
+        return string.toString();
+    }
+
     @Override
     public String toString(){
         StringBuilder cardString = new StringBuilder();
 
-        String leftAlignFormat = "| %-20s | %4d |%n";
-        String effectFormat = "| %-27s |%n";
+        String leftAlignFormat = "| %-20s | %4d |";
+        String effectFormat = "| %-27s |";
 
         cardString.append("+----------------------+------+\n");
-        cardString.append(String.format(leftAlignFormat, name, closeness));
+        cardString.append(String.format(leftAlignFormat, name, closeness)).append("\n");
         cardString.append("+----------------------+------+\n");
 
         String[] effectLines = splitStringAtNextSpaceAfterMaxChars(effect, 27);
         //make every card's length the same adding white space if necessary
         for (int i=0; i<6; i++){
             if (i < effectLines.length) {
-                cardString.append(String.format(effectFormat, effectLines[i]));
+                cardString.append(String.format(effectFormat, effectLines[i])).append("\n");
             } else {
-                cardString.append(String.format(effectFormat, ""));
+                cardString.append(String.format(effectFormat, "")).append("\n");
             }
         }
 

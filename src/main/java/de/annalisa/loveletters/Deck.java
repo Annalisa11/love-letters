@@ -6,29 +6,22 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Deck {
-    private final int deckSize;
-    private Random random = new Random();
+    private final Random random = new Random();
     private ArrayList<Card> cards;
     private int numberOfCards;
 
 
-    public Deck(int deckSize){
-        this.deckSize = deckSize;
-        this.cards = new ArrayList<Card>();
+    public Deck(){
+        this.cards = new ArrayList<>();
         this.numberOfCards = 0;
     }
 
     //Getters
-    public int getDeckSize() {
-        return deckSize;
-    }
-
     public int getNumberOfCards() {
         return numberOfCards;
     }
 
     public Card getTopCard(){
-
         Card topCard = cards.get(cards.size()-1);
         cards.remove((cards.size()-1));
         numberOfCards--;

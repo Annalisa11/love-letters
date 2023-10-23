@@ -21,7 +21,6 @@ public class Guard extends Card{
 
         Player chosenPlayer;
         if(playerNumber == -1){
-            System.out.println("you can't choose yourself for guard effect. Effect is not applied");
             return;
         } else {
             chosenPlayer = otherPlayers.get(playerNumber-1);

@@ -25,9 +25,7 @@ public class Prince extends Card{
 
             //effect logic
             List<Card> hand = chosenPlayer.getHand();
-            Integer[] numbers = IntStream.rangeClosed(1, hand.size()).boxed().toArray(Integer[]::new);
-            Card nonPrinceCard = chosenPlayer.getHand().stream().filter(card -> card.getCloseness() != 5).findFirst().orElse(chosenPlayer.getHand().get(0));
-            int cardToDropIndex = game.getIndexOfCardInHand(chosenPlayer, nonPrinceCard.getCloseness());
+            int cardToDropIndex = Game.getIndexOfOtherCardOnHand(chosenPlayer, 5);
             Card removedCard = hand.get(cardToDropIndex);
             if(removedCard.getCloseness() == 8){
                 game.knockOutPlayer(chosenPlayer, currentPlayer);

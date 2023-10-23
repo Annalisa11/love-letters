@@ -13,7 +13,6 @@ public class Game {
     private Deck deck;
     private int round = 1;
     private int turns = 0;
-    private int effectID;
     private Card firstCardOfDeck;
     private ArrayList<Card> threeOpenCards = new ArrayList<>(3);
     private Player currentPlayer;
@@ -85,7 +84,6 @@ public class Game {
                     threeOpenCards.add(deck.getTopCard());
                 }
                 printThreeOpenCards(threeOpenCards);
-                //TODO: reset open cards.. in round two there were 6
             }
             System.out.println("-------\n\n");
 
@@ -103,7 +101,6 @@ public class Game {
         System.out.println("----------------\n\n");
     }
 
-    //TODO: refactor so that activeplayers is boolean attribute in every player?
     private void startRound() {
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
@@ -133,8 +130,11 @@ public class Game {
         calculateWinnerOfGame();
         System.out.println("the winner is: " + roundWinner.getName() );
         //reset stats for next round
-        players.forEach(Player::clearHand);
-        players.forEach(Player::resetTurn);
+        players.forEach(player -> {
+            player.clearHand();
+            player.resetTurn();
+            player.resetImmune();
+        });
         deck.clearDeck();
         threeOpenCards.clear();
         firstCardOfDeck = null;
@@ -201,14 +201,14 @@ public class Game {
      *
      * @param otherPlayers A list of players from which the current player can choose.
      * @param message      The message displayed to instruct the player's choice.
-     * @return The index of the chosen player in the 'otherPlayers' list.
+     * @return The index of the chosen player in the 'otherPlayers' list. min 0 - max 3.
      * <ul>
      *      <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
      *      <li><code>200</code> - Returns <code>200</code> if all players are immune AND the player wants to apply the Prince effect and therefore has to choose himself.</li>
      * </ul>
      */
     public int choosePlayerForEffect(List<Player> otherPlayers, String message){
-        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
+        Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new);
         String names = "";
         for(int i=1; i<=otherPlayers.size(); i++){
             names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
@@ -218,11 +218,7 @@ public class Game {
         //All players immune
         if(numbers.length == 0){
             System.out.println("All players are immune.");
-            if (effectID == 5){             //TODO: add update of effectID before (or after?) the applyEffect()
-                System.out.println("You have to choose yourself.");
-                return 200;                 //TODO: check for code 200 or change this implementation to something else
-            }
-            System.out.println("Effect is not applied.");
+            System.out.println("Effect is not applied. More luck next time ;)");
             return -1;
         }
 
@@ -265,7 +261,7 @@ public class Game {
     //TODO: get rid of shuffleDeck. Just use deck.schuffleDeck
 
     void createDeck() {
-        deck = new Deck(16);
+        deck = new Deck();
         deck.addCard(new Princess());
         deck.addCard(new Countess());
         deck.addCard(new King());
@@ -283,9 +279,14 @@ public class Game {
      * @param closeness  The closeness value to search for in the player's hand.
      * @return The index of the first card with the specified closeness value in the player's hand, or -1 if not found.
      */
-    public int getIndexOfCardInHand(Player player, int closeness){
+    public static int getIndexOfCardInHand(Player player, int closeness){
         return IntStream.range(0, player.getHand().size())
                 .filter(i -> player.getHand().get(i).getCloseness() == closeness).findFirst().orElse(-1);
+    }
+
+    public static int getIndexOfOtherCardOnHand(Player player, int closenessOfCardToIgnore){
+        Card otherCard = player.getHand().stream().filter(card -> card.getCloseness() != closenessOfCardToIgnore).findFirst().orElse(player.getHand().get(0));
+        return Game.getIndexOfCardInHand(player, otherCard.getCloseness());
     }
 
     public boolean isSpecificCardOnHand(Player player, int closeness){

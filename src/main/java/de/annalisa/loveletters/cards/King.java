@@ -18,7 +18,6 @@ public class King extends Card{
 
         Player chosenPlayer;
         if(playerNumber == -1){
-            System.out.println("Effect is not applied");
             return;
         } else {
             chosenPlayer = otherPlayers.get(playerNumber-1);
@@ -26,7 +25,7 @@ public class King extends Card{
 
         //get Cards to swap
         Card otherPlayersCard = chosenPlayer.getHand().get(0);
-        int yourCardIndex = game.getIndexOfCardInHand(currentPlayer, 6);
+        int yourCardIndex = Game.getIndexOfOtherCardOnHand(currentPlayer, 6); // what?
 
         Card yourCard = currentPlayer.getHand().get(yourCardIndex);
 

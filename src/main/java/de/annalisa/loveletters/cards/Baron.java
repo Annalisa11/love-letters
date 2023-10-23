@@ -19,18 +19,21 @@ public class Baron extends Card{
         int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player to compare hands with: ");
 
         Player chosenPlayer;
-        if(playerNumber == -1){
-            System.out.println("you can't choose yourself for baron effect. Effect is not applied");
+        if(playerNumber == -1)
             return;
-        } else {
+        else
             chosenPlayer = otherPlayers.get(playerNumber-1);
-        }
+
+        currentPlayer.setScore(currentPlayer.getScore() - 3);
 
         System.out.println("Alright! The scores are:   You (" + currentPlayer.getScore() + ")   " + chosenPlayer.getName() + " (" + chosenPlayer.getScore() + ")." );
         ArrayList<Player> winner = new ArrayList<>(Arrays.asList(currentPlayer, chosenPlayer));
         winner.sort(new Player.sortByScore());
-        //TODO: What happens when there is a tie?
-        Player loser = winner.get(winner.size() -1);
+        if (winner.get(0) == winner.get(1)){
+            System.out.println("You have both the same score... nothing happens :)");
+            return;
+        }
+        Player loser = winner.get(winner.size()-1);
         System.out.println(loser.getName() + " has the lowest score and is therefore knocked out!");
         game.knockOutPlayer(loser, currentPlayer);
     }

@@ -21,6 +21,7 @@ public class Priest extends Card{
             System.out.println(chosenPlayer.getName() + " has following cards: \n" + Card.printCardsBesideEachOther(chosenPlayer.getHand()));
             return;
         }
-        System.out.println("All players are immune. More luck next time ;)");
+        System.out.println("All players are immune.");
+        System.out.println("Effect is not applied. More luck next time ;)");
     }
 }

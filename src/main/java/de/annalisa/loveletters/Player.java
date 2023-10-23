@@ -52,6 +52,14 @@ public class Player {
         this.immune = !immune;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void resetImmune() {
+        this.immune = false;
+    }
+
     //Other
     public void resetTurn() {
         this.turn = 1;
@@ -89,7 +97,19 @@ public class Player {
     //TODO: maybe implement an equals functions? To compare players?
 
     //Comparators
+    /**
+     * A comparator for sorting Player objects based on their scores in descending order.
+     * Players with higher scores will appear first in the sorted list.
+     */
     public static class sortByScore implements Comparator<Player> {
+        /**
+         * Compares two Player objects based on their scores.
+         *
+         * @param p1 The first Player object to compare.
+         * @param p2 The second Player object to compare.
+         * @return a negative integer, zero, or a positive integer as the first player's score is
+         *         less than, equal to, or greater than the second player's score.
+         */
         public int compare(Player p1, Player p2){
             return p2.score - p1.score;
         }

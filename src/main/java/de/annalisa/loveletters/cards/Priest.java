@@ -18,7 +18,7 @@ public class Priest extends Card{
         if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
             int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
             Player chosenPlayer = otherPlayers.get(playerNumber-1);
-            System.out.println(chosenPlayer.getName() + " has following cards: \n" + chosenPlayer.getHand());
+            System.out.println(chosenPlayer.getName() + " has following cards: \n" + Card.printCardsBesideEachOther(chosenPlayer.getHand()));
             return;
         }
         System.out.println("All players are immune. More luck next time ;)");

@@ -32,6 +32,4 @@ public class showHandCommand implements Command {
         System.out.println(Card.printCardsBesideEachOther(player.getHand()));
         return true;
     }
-
-
 }

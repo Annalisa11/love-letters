@@ -64,6 +64,11 @@ public class Deck {
         this.cards = shuffled;
     }
 
+    public void clearDeck(){
+        cards.clear();
+        numberOfCards = 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

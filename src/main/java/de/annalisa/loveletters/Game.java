@@ -23,6 +23,8 @@ public class Game {
     private ArrayList<Player> activePlayers = new ArrayList<>();
     private CommandManager commandManager = new CommandManager();
 
+    private boolean playAgain;
+
     public CommandManager getCommandManager() {
         return commandManager;
     }
@@ -52,8 +54,17 @@ public class Game {
         waitForInput(this);
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    private void startNewGame(Game game){
+        playAgain = true;
+        while (playAgain){
+            displayIntroduction();
+            waitForInput(game);
+
+        }
+    }
+
+    public static void exitGame() {
+        return;
     }
 
     public void startGame(){
@@ -124,6 +135,9 @@ public class Game {
         //reset stats for next round
         players.forEach(Player::clearHand);
         players.forEach(Player::resetTurn);
+        deck.clearDeck();
+        threeOpenCards.clear();
+        firstCardOfDeck = null;
 
         round++;
     }
@@ -188,6 +202,10 @@ public class Game {
      * @param otherPlayers A list of players from which the current player can choose.
      * @param message      The message displayed to instruct the player's choice.
      * @return The index of the chosen player in the 'otherPlayers' list.
+     * <ul>
+     *      <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
+     *      <li><code>200</code> - Returns <code>200</code> if all players are immune AND the player wants to apply the Prince effect and therefore has to choose himself.</li>
+     * </ul>
      */
     public int choosePlayerForEffect(List<Player> otherPlayers, String message){
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new); //transform IntStream into Integer[]
@@ -196,6 +214,17 @@ public class Game {
             names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
         }
         numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
+
+        //All players immune
+        if(numbers.length == 0){
+            System.out.println("All players are immune.");
+            if (effectID == 5){             //TODO: add update of effectID before (or after?) the applyEffect()
+                System.out.println("You have to choose yourself.");
+                return 200;                 //TODO: check for code 200 or change this implementation to something else
+            }
+            System.out.println("Effect is not applied.");
+            return -1;
+        }
 
         return validateInputNumbers(numbers, message + names);
     }
@@ -247,9 +276,16 @@ public class Game {
         deck.addSameCardNTimes(new Handmaid(), 2);
     }
 
+    /**
+     * Finds the index of a card with a specific closeness value in a player's hand.
+     *
+     * @param player     The player whose hand is being searched.
+     * @param closeness  The closeness value to search for in the player's hand.
+     * @return The index of the first card with the specified closeness value in the player's hand, or -1 if not found.
+     */
     public int getIndexOfCardInHand(Player player, int closeness){
         return IntStream.range(0, player.getHand().size())
-                .filter(i -> player.getHand().get(i).getCloseness() != closeness).findFirst().orElse(-1);
+                .filter(i -> player.getHand().get(i).getCloseness() == closeness).findFirst().orElse(-1);
     }
 
     public boolean isSpecificCardOnHand(Player player, int closeness){
@@ -325,21 +361,16 @@ public class Game {
      * @param validValues An array of valid integer values that the user's input can match.
      * @param message     The prompt message displayed to the user.
      * @param exceptions  An optional array of values that are considered exceptions and will not be treated as valid.
-     * @return The validated integer input provided by the user.
+     * @return The valid integer input provided by the user.
+     * <ul>
+     *     <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
+     *     <li><code>200</code> - Returns <code>200</code> if all players are immune AND the player wants to apply the Prince effect and therefore has to choose himself.</li>
+     * </ul>
      * @throws InputMismatchException If the user enters a non-integer value.
      */
     public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
 
-        //All players immune
-        if(validValues.length == 0){
-            System.out.println("All players are immune.");
-            if (effectID == 5){             //TODO: add update of effectID before (or after?) the applyEffect()
-                System.out.println("You have to choose yourself.");
-                return 200;                 //TODO: check for code 200 or change this implementation to something else
-            }
-            System.out.println("Effect is not applied.");
-            return -1;
-        }
+
 
         //You can choose player
         Scanner scanner = new Scanner(System.in);

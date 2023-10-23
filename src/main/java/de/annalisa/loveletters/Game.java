@@ -255,7 +255,7 @@ public class Game {
     }
 
     public int chooseCardToPlay(Player player) {
-        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + Card.printCardsBesideEachOther(player.getHand()) + "first (1) or second (2)");
+        return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + Card.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
     }
 
     //winning helper functions

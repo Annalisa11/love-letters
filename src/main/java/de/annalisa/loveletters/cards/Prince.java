@@ -29,17 +29,17 @@ public class Prince extends Card{
             } else {
                 chosenPlayer = allPlayers.get(playerNumber-1);
             }
-            System.out.println("Discard card and draw new one: " + chosenPlayer);
+//            System.out.println("Discard card and draw new one: " + chosenPlayer);
 
             //effect logic
             List<Card> hand = chosenPlayer.getHand();
             Integer[] numbers = IntStream.rangeClosed(1, hand.size()).boxed().toArray(Integer[]::new);
-            int cardToDropIndex = game.validateInputNumbers(numbers, "Which card should be discarded? \n(if you choose for yourself, please do not choose the prince, since you are playing the card right now ;)") -1;
-
+            int cardToDropIndex = game.validateInputNumbers(numbers, "Which card should be discarded? \n(if you choose for yourself, please do not choose the prince, since you are playing the card right now ;) )") -1;
+            //TODO: how does the player know which card is the prince?
             Card removedCard = hand.get(cardToDropIndex);
             if(removedCard.getCloseness() == 8){
                 game.knockOutPlayer(chosenPlayer, currentPlayer);
-                System.out.println(chosenPlayer + " had to discard the Princess... what a shame, he or she is knocked out!");
+                System.out.println(chosenPlayer + " had to discard the Princess... what a shame, " + chosenPlayer.getName() + " is knocked out!");
                 return;
             }
             hand.remove(cardToDropIndex);

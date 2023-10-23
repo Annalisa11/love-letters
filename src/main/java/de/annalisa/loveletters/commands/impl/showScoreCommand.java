@@ -4,6 +4,8 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
+import java.util.stream.Collectors;
+
 public class showScoreCommand implements Command {
 
     @Override
@@ -18,7 +20,7 @@ public class showScoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With showScore you can view your personal score, i.e. the sum of your card's closeness values. Only valid when playing the game.";
+        return "With showScore you can view the number of tokens of all players. Only valid when playing the game.";
     }
 
     @Override
@@ -27,8 +29,7 @@ public class showScoreCommand implements Command {
             System.out.println("you have to start the game to see your score");
             return true;
         }
-        Player player = game.getCurrentPlayer();
-        System.out.println("SCORE: " + player.getScore());
+        System.out.println("TOKENS: " + game.getPlayers().stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
         return true;
     }
 

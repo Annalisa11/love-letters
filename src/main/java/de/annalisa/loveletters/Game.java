@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import de.annalisa.loveletters.cards.*;
 
+/**
+ * The `Game` class represents a Love Letter card game session. It manages the game flow, player interactions, and scoring.
+ */
 public class Game {
     private Deck deck;
     private int round = 1;
@@ -48,24 +51,17 @@ public class Game {
         return activePlayers;
     }
 
+    /**
+     * Initializes a new Love Letter card game session.
+     */
     public Game(){
         displayIntroduction();
         waitForInput(this);
     }
 
-    private void startNewGame(Game game){
-        playAgain = true;
-        while (playAgain){
-            displayIntroduction();
-            waitForInput(game);
-
-        }
-    }
-
-    public static void exitGame() {
-        return;
-    }
-
+    /**
+     * Starts the Love Letter game.
+     */
     public void startGame(){
         commandManager.setInGame(true);
         System.out.println("Before we start with the game, let's define the players.");
@@ -73,7 +69,8 @@ public class Game {
         do {
             //set up game
             createDeck();
-            shuffleDeck();
+            deck.shuffleDeck();
+
 
             //set up deck/cards
             System.out.println("\n-------");
@@ -101,6 +98,9 @@ public class Game {
         System.out.println("----------------\n\n");
     }
 
+    /**
+     * Starts a new round of the game.
+     */
     private void startRound() {
         System.out.println("------");
         System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
@@ -142,6 +142,11 @@ public class Game {
         round++;
     }
 
+    /**
+     * Takes a turn for the given player.
+     *
+     * @param player The player taking their turn.
+     */
     private void takeTurn(Player player){
         System.out.println("\n== " + player.getName() + ", it's your turn! ==");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
@@ -164,10 +169,20 @@ public class Game {
     }
 
     //formatting helper functions
+    /**
+     * Displays an introduction message for the Love Letter game.
+     */
     private void displayIntroduction(){
         System.out.println("Welcome to LOVE LETTER!");
         System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
     }
+
+    /**
+     * Prints the names of the players.
+     *
+     * @param players The list of players.
+     * @return A formatted string containing the names of the players.
+     */
     public String printOnlyNames(ArrayList<Player> players){
         //TODO: use a string builder? Make it more elegant...
         List<String> names = players.stream().map(Player::getName).toList();
@@ -186,12 +201,24 @@ public class Game {
         return res;
     }
 
+
+    /**
+     * Prints the three open cards in the game.
+     *
+     * @param openCards The list of open cards.
+     */
     public void printThreeOpenCards(ArrayList<Card> openCards){
         System.out.println("three open cards");
         System.out.println(Card.printCardsBesideEachOther(openCards));
     }
 
     //other helper functions
+    /**
+     * Retrieves other players excluding the current player.
+     *
+     * @param currentPlayer The name of the current player.
+     * @return A list of other players.
+     */
     public List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
         return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates
     }
@@ -204,7 +231,6 @@ public class Game {
      * @return The index of the chosen player in the 'otherPlayers' list. min 0 - max 3.
      * <ul>
      *      <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
-     *      <li><code>200</code> - Returns <code>200</code> if all players are immune AND the player wants to apply the Prince effect and therefore has to choose himself.</li>
      * </ul>
      */
     public int choosePlayerForEffect(List<Player> otherPlayers, String message){
@@ -225,6 +251,12 @@ public class Game {
         return validateInputNumbers(numbers, message + names);
     }
 
+    /**
+     * Knocks out a player from the game.
+     *
+     * @param player         The player to be knocked out.
+     * @param currentPlayer   The current player who is knocking out the other player.
+     */
     public void knockOutPlayer(Player player, Player currentPlayer){
         int indexOfPlayer = activePlayers.indexOf(player);
         int indexOfCurrentPlayer = activePlayers.indexOf(currentPlayer);
@@ -234,6 +266,11 @@ public class Game {
         activePlayers.remove(player);
     }
 
+    /**
+     * Draws two cards for all players in the game.
+     *
+     * @param players The list of players.
+     */
     private void allPlayersDrawCard(ArrayList<Player> players) {
         for(Player player : players){
             for(int i=0; i<2; i++){
@@ -243,6 +280,9 @@ public class Game {
         }
     }
 
+    /**
+     * Creates the players for the game based on user input.
+     */
     private void createPlayers() {
         int numberOfPlayers;
         numberOfPlayers = validateInputNumbers(new Integer[]{2,3,4}, "With how many players do you want to play? (2,3,4)");
@@ -255,11 +295,9 @@ public class Game {
         System.out.println("Great! Let's start!");
     }
 
-    private void shuffleDeck() {
-        deck.shuffleDeck();
-    }
-    //TODO: get rid of shuffleDeck. Just use deck.schuffleDeck
-
+    /**
+     * Creates a deck of Love Letter cards.
+     */
     void createDeck() {
         deck = new Deck();
         deck.addCard(new Princess());
@@ -284,20 +322,46 @@ public class Game {
                 .filter(i -> player.getHand().get(i).getCloseness() == closeness).findFirst().orElse(-1);
     }
 
+    /**
+     * Gets the index of the other card in the player's hand, excluding a specific card by closeness.
+     *
+     * @param player                    The player whose hand is being searched.
+     * @param closenessOfCardToIgnore   The closeness value of the card to be ignored.
+     * @return The index of the other card in the player's hand.
+     */
     public static int getIndexOfOtherCardOnHand(Player player, int closenessOfCardToIgnore){
         Card otherCard = player.getHand().stream().filter(card -> card.getCloseness() != closenessOfCardToIgnore).findFirst().orElse(player.getHand().get(0));
         return Game.getIndexOfCardInHand(player, otherCard.getCloseness());
     }
 
+    /**
+     * Checks if a player's hand contains a card with a specific closeness value.
+     *
+     * @param player    The player whose hand is being checked.
+     * @param closeness The closeness value to check for in the player's hand.
+     * @return True if the player's hand contains a card with the specified closeness; otherwise false.
+     */
     public boolean isSpecificCardOnHand(Player player, int closeness){
         return player.getHand().stream().anyMatch(card -> card.getCloseness() == closeness);
     }
 
+    /**
+     * Prompts the player to choose which card to play.
+     *
+     * @param player The player choosing a card to play.
+     * @return The index of the chosen card in the player's hand (0 or 1).
+     */
     public int chooseCardToPlay(Player player) {
         return validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + Card.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
     }
 
     //winning helper functions
+    /**
+     * Determines the winner of the game based on the number of needed love tokens.
+     *
+     * @param neededTokens The number of love tokens required to win the game.
+     * @return {@code true} if there is a game winner, {@code false} if no winner has been decided yet.
+     */
     private boolean decideWinner(int neededTokens){
         List<Player> winners = players.stream().filter(player -> player.getLoveToken() == neededTokens).toList();
         if(winners.isEmpty()){
@@ -315,6 +379,11 @@ public class Game {
         }
     }
 
+    /**
+     * Switch case to determine if there is a game winner based on the number of players and their love tokens.
+     *
+     * @return {@code true} if a game winner has been determined, {@code false} otherwise.
+     */
     private boolean calculateWinnerOfGame() {
         return switch (players.size()) {
             case 2 -> decideWinner(7);
@@ -324,6 +393,10 @@ public class Game {
         };
     }
 
+    /**
+     * Calculates the winner of the current round based on player scores.
+     * The winner of the round is awarded a love token.
+     */
     private void calculateWinnerOfRound() {
         if(activePlayers.size() > 1){
             activePlayers.sort(new Player.sortByScore());
@@ -370,10 +443,6 @@ public class Game {
      * @throws InputMismatchException If the user enters a non-integer value.
      */
     public int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions){
-
-
-
-        //You can choose player
         Scanner scanner = new Scanner(System.in);
         int input;
         while(true){
@@ -393,11 +462,21 @@ public class Game {
         }
     }
 
+    /**
+     * Reads a string input from the console and returns it.
+     *
+     * @return The string entered by the user in the console.
+     */
     public String getStringFromConsole(){
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
 
+    /**
+     * The main entry point of the Love Letter game application.
+     *
+     * @param args The command-line arguments passed to the application (not used in LoveLetters).
+     */
     public static void main(String[] args) {
         new Game();
     }

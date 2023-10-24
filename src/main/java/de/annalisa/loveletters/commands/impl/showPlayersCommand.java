@@ -17,18 +17,18 @@ public class showPlayersCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With showPlayers you can see every player's names and if they are still active or have been knocked out in the current round.";
+        return "With showPlayers you can see every player's names and if they are still active or have been knocked out in the current round. (In-game only)";
     }
 
     @Override
     public boolean execute(Game game, boolean inGame) {
         if(!inGame){
-            System.out.println("you have start the game to see the players.");
+            System.out.println("❗ you have start the game to see the players.");
             return true;
         }
 
         for(Player player: game.getPlayers()){
-            System.out.println(player.getName() + " " + (game.getActivePlayers().contains(player) ? "(active)" : "(knocked out)" + "\n"));
+            System.out.println(((game.getActivePlayers().contains(player) ? "\uD83C\uDF1F " : "\uD83D\uDC94 " ) + player.getName() + " " + (game.getActivePlayers().contains(player) ? "(active)" : "(knocked out)")));
         }
         return true;
     }

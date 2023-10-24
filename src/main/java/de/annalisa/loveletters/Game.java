@@ -75,11 +75,12 @@ public class Game {
             //set up deck/cards
             System.out.println("\n-------");
             firstCardOfDeck = deck.getTopCard();
-            System.out.println("first card: \n" + firstCardOfDeck); // remove later, first card should not be visible
+            System.out.println("first card of the deck was drawn and set aside..."); // remove later, first card should not be visible
             if(players.size() == 2){
                 for(int i=0; i < 3; i++){
                     threeOpenCards.add(deck.getTopCard());
                 }
+                System.out.println("The next three cards were drawn and set aside, face up, so you can see them...");
                 printThreeOpenCards(threeOpenCards);
             }
             System.out.println("-------\n\n");
@@ -94,7 +95,7 @@ public class Game {
         } while(!calculateWinnerOfGame());
 
         System.out.println("\n\n----------------");
-        System.out.println("Congratulations " + gameWinner.getName() + ", you win!");
+        System.out.println("Congratulations \uD83D\uDC8C" + gameWinner.getName() + "\uD83D\uDC8C, you win!");
         System.out.println("----------------\n\n");
     }
 
@@ -103,8 +104,9 @@ public class Game {
      */
     private void startRound() {
         System.out.println("------");
-        System.out.println("START ROUND " + round + ". With these players: " + printOnlyNames(activePlayers));
-        System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
+        System.out.println("\uD83D\uDC95 START ROUND " + round + " \uD83D\uDC95");
+        System.out.println("PLAYERS: " + printOnlyNames(activePlayers));
+        System.out.println("TOKENS: " + players.stream().map(player ->  player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
 
         while(deck.getNumberOfCards() != 0){
             if(turns > activePlayers.size()-1){
@@ -125,6 +127,7 @@ public class Game {
                 break;
             }
         }
+        System.out.println("\n\n-------");
         System.out.println("End of Round " + round + "!");
         calculateWinnerOfRound();
         calculateWinnerOfGame();
@@ -148,7 +151,7 @@ public class Game {
      * @param player The player taking their turn.
      */
     private void takeTurn(Player player){
-        System.out.println("\n== " + player.getName() + ", it's your turn! ==");
+        System.out.println("\n=== " + player.getName() + ", it's your turn! ===");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
         if(player.isImmune()){
             System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
@@ -173,7 +176,7 @@ public class Game {
      * Displays an introduction message for the Love Letter game.
      */
     private void displayIntroduction(){
-        System.out.println("Welcome to LOVE LETTER!");
+        System.out.println("------  Welcome to \uD83D\uDC8C LOVE LETTER! \uD83D\uDC8C ------");
         System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
     }
 
@@ -208,7 +211,7 @@ public class Game {
      * @param openCards The list of open cards.
      */
     public void printThreeOpenCards(ArrayList<Card> openCards){
-        System.out.println("three open cards");
+        System.out.println("three open cards:");
         System.out.println(Card.printCardsBesideEachOther(openCards));
     }
 
@@ -422,7 +425,7 @@ public class Game {
             if (commandManager.isCommand(input)){
                 scan = commandManager.handleInput(input, game);
             } else {
-                System.out.println("Input not valid. Try again");
+                System.out.println("⚠ Input not valid. Check out valid commands with '\\help.");
             }
         }
     }
@@ -452,12 +455,12 @@ public class Game {
                 input = Integer.parseInt(inputString);
 
                 if(!Arrays.asList(validValues).contains(input) || Arrays.asList(exceptions).contains(input)){
-                    System.out.println("invalid input. Try again.");
+                    System.out.println("⚠ invalid input. Try again.");
                     continue;
                 }
                 return input;
             } catch (Exception e){
-                System.out.println("Please enter a number.");
+                System.out.println("⚠ Please enter a number.");
             }
         }
     }

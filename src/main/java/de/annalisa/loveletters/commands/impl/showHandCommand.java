@@ -18,13 +18,13 @@ public class showHandCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With showHand you can see which cards you have on your hand without having to do play one or do anything else. Only valid when playing the game.";
+        return "With showHand you can see which cards you have on your hand without having to do play one or do anything else. (In-game only)";
     }
 
     @Override
     public boolean execute(Game game, boolean inGame) {
         if(!inGame){
-            System.out.println("you have to start the game to view your cards");
+            System.out.println("❗ you have to start the game to view your cards");
             return true;
         }
         Player player = game.getCurrentPlayer();

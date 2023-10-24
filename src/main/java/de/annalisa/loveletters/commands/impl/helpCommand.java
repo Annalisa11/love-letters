@@ -26,7 +26,7 @@ public class helpCommand implements Command {
         System.out.println("You can use these commands:");
         List<Command> commands = game.getCommandManager().getCommands();
         for(Command command : commands){
-            System.out.println("\\" + command.getCommand() + "   ->   " + command.getDescription());
+            System.out.println("\uD83E\uDD0D \\" + command.getCommand() + "   ->   " + command.getDescription());
         }
         return true;
     }

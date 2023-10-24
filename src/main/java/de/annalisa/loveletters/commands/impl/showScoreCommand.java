@@ -20,16 +20,16 @@ public class showScoreCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With showScore you can view the number of tokens of all players. Only valid when playing the game.";
+        return "With showScore you can view the number of tokens of all players. (In-game only)";
     }
 
     @Override
     public boolean execute(Game game, boolean inGame) {
         if(!inGame){
-            System.out.println("you have start the game to view all players' scores.");
+            System.out.println("❗ you have start the game to view all players' scores.");
             return true;
         }
-        System.out.println("TOKENS: " + game.getPlayers().stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
+        System.out.println("TOKENS: \n" + game.getPlayers().stream().map(player -> "\uD83D\uDC9D " + player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("\n")));
         return true;
     }
 

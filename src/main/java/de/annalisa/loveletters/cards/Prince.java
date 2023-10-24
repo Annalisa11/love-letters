@@ -29,7 +29,7 @@ public class Prince extends Card{
             Card removedCard = hand.get(cardToDropIndex);
             if(removedCard.getCloseness() == 8){
                 game.knockOutPlayer(chosenPlayer, currentPlayer);
-                System.out.println(chosenPlayer + " had to discard the Princess... what a shame, " + chosenPlayer.getName() + " is knocked out!");
+                System.out.println(chosenPlayer.getName() + " had to discard the Princess... what a shame, " + chosenPlayer.getName() + " is knocked out!");
                 return;
             }
             hand.remove(cardToDropIndex);

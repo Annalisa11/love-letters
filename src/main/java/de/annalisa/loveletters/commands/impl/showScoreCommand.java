@@ -30,7 +30,6 @@ public class showScoreCommand implements Command {
             return true;
         }
         System.out.println("TOKENS: " + game.getPlayers().stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
-        game.exitGame();
         return true;
     }
 

@@ -29,7 +29,7 @@ public class Baron extends Card{
         System.out.println("Alright! The scores are:   You (" + currentPlayer.getScore() + ")   " + chosenPlayer.getName() + " (" + chosenPlayer.getScore() + ")." );
         ArrayList<Player> winner = new ArrayList<>(Arrays.asList(currentPlayer, chosenPlayer));
         winner.sort(new Player.sortByScore());
-        if (winner.get(0) == winner.get(1)){
+        if (winner.get(0).getScore() == winner.get(1).getScore()){
             System.out.println("You have both the same score... nothing happens :)");
             return;
         }

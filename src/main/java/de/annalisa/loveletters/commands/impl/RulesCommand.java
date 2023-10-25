@@ -3,16 +3,25 @@ package de.annalisa.loveletters.commands.impl;
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
-
-import java.io.*;
+import de.annalisa.loveletters.utils.FileHelper;
 
 public class RulesCommand implements Command {
-    private String[] rules;
+    private final String[] rules;
+    private static final String RULES_PATH = "rules.txt";
 
+    /**
+     * Constructs a new `RulesCommand` instance by reading the rules from a file in the resources directory.
+     * The constructor retrieves the rules text from a file named "rules.txt" located in the resources directory.
+     * It ensures that the `rulesText` is not null, and then splits it into an array of substrings with a maximum
+     * line length of 80 characters, ensuring that words are not split in the middle.
+     */
     public RulesCommand(){
-        String rulesText = readFileFromResources("rules.txt");
-        assert rulesText != null;
-        rules = Card.splitStringAtNextSpaceAfterMaxChars(rulesText, 80);
+        String rulesText = FileHelper.readFileFromResources(RULES_PATH);
+        if(rulesText != null){
+            rules = Card.splitStringAtNextSpaceAfterMaxChars(rulesText, 80);
+        } else {
+            rules = new String[]{"Oh no.. something went wrong :("};
+        }
     }
     @Override
     public String getCommand() {
@@ -37,24 +46,5 @@ public class RulesCommand implements Command {
             }
         }
         return true;
-    }
-
-    private String readFileFromResources(String filePath){
-        try {
-            var stream = ClassLoader.getSystemResourceAsStream(filePath);
-            StringBuilder stringBuilder = new StringBuilder();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-            String ruleLine;
-            while ((ruleLine = br.readLine())!= null){
-                stringBuilder.append(ruleLine).append('\n');
-            }
-            return stringBuilder.toString();
-        } catch (FileNotFoundException e){
-            System.out.println("Something went wrong while retrieving the rules... please google them instead.");
-        } catch (Exception e) {
-            System.out.println("Oh no.. something went wrong :(\n" + e.getMessage());
-        }
-        return null;
     }
 }

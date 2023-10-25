@@ -2,6 +2,7 @@ package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
+import de.annalisa.loveletters.utils.InputHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Guard extends Card{
         Player currentPlayer = game.getCurrentPlayer();
 
         List<Player> otherPlayers = game.getOtherPlayersExcludingCurrent(currentPlayer.getName());
-        int cardNumber = game.validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.\nPriest (2), Baron (3), Handmaid (4), Prince (5), King (6), Countess (7), Princess (8)");
+        int cardNumber = InputHelper.validateInputNumbers(new Integer[]{2,3,4,5,6,7,8}, "Choose a card number from 2 - 8.\nPriest (2), Baron (3), Handmaid (4), Prince (5), King (6), Countess (7), Princess (8)");
         int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player to potentially knock out: ");
 
         Player chosenPlayer;

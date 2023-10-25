@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CommandManager {
-    private List<Command> commands = new ArrayList<>();
+    private final List<Command> commands = new ArrayList<>();
 
     private boolean inGame = false;
 

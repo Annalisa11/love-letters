@@ -4,7 +4,6 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.utils.InputHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Guard extends Card {

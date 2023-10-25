@@ -10,8 +10,8 @@ import java.util.Comparator;
  * such as name, hand, score, love tokens, and game-related actions.
  */
 public class Player {
-    private String name;
-    private ArrayList<Card> hand;
+    private final String name;
+    private final ArrayList<Card> hand;
     private int score;
     private int loveToken;
     private int turn;

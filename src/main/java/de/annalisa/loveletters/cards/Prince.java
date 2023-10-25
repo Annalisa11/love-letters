@@ -4,8 +4,6 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Prince extends Card {
 

@@ -65,19 +65,25 @@ public abstract class Card {
             int endIndex = Math.min(index + maxChars, string.length());
             String part = string.substring(index, endIndex);
 
-            if (endIndex < string.length() && string.charAt(endIndex) != ' ') {
-                // check if end char is not a space and if not move endIndex backwards until you find one
-                while (endIndex > index && string.charAt(endIndex) != ' ') {
-                    endIndex--;
-                }
+            if(part.contains("\n")){
+                endIndex = string.substring(0, endIndex).indexOf("\n", index); //so that index is from string and matches the index numbers of part. Otherwise, the index would be always too small
                 part = string.substring(index, endIndex);
+                string = string.substring(0, endIndex).concat(string.substring(endIndex+1));
+            } else {
+                if (endIndex < string.length() && string.charAt(endIndex-1) != ' ') {
+                    // check if end char is not a space and if not move endIndex backwards until you find one
+                    while (endIndex > index && string.charAt(endIndex-1) != ' ') {
+                        endIndex--;
+                    }
+                    part = string.substring(index, endIndex);
+                }
             }
 
             splits.add(part);
             index = endIndex;
 
             // ignore leading spaces in the next string
-            while (index < string.length() && string.charAt(index) == ' '){
+            while (index < string.length() && (string.charAt(index) == ' ' )){
                 index++;
             }
         }

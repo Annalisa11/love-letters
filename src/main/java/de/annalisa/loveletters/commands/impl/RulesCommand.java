@@ -12,7 +12,7 @@ public class RulesCommand implements Command {
     public RulesCommand(){
         String rulesText = readFileFromResources("rules.txt");
         assert rulesText != null;
-        rules = Card.splitStringAtNextSpaceAfterMaxChars(rulesText, 60);
+        rules = Card.splitStringAtNextSpaceAfterMaxChars(rulesText, 80);
     }
     @Override
     public String getCommand() {

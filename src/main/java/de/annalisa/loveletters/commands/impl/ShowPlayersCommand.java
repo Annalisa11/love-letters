@@ -4,7 +4,7 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
-public class showPlayersCommand implements Command {
+public class ShowPlayersCommand implements Command {
     @Override
     public String getCommand() {
         return "showPlayers";

@@ -54,7 +54,7 @@ public abstract class Card {
      * @return An array of substrings, each of which is less than or equal to maxChars characters in length,
      * and words are not split in the middle. Leading and trailing spaces are trimmed.
      */
-    private String[] splitStringAtNextSpaceAfterMaxChars(String string, int maxChars){
+    public static String[] splitStringAtNextSpaceAfterMaxChars(String string, int maxChars){
         if (string.length() <= maxChars) {
             return new String[]{string};
         }

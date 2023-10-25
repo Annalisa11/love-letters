@@ -5,7 +5,7 @@ import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
 
-public class playCardCommand implements Command {
+public class PlayCardCommand implements Command {
     @Override
     public String getCommand() {
         return "playCard";

@@ -14,11 +14,12 @@ public class CommandManager {
 
     public CommandManager(){
         this.commands.add(new StartCommand());
-        this.commands.add(new playCardCommand());
-        this.commands.add(new showHandCommand());
-        this.commands.add(new showScoreCommand());
-        this.commands.add(new helpCommand());
-        this.commands.add(new showPlayersCommand());
+        this.commands.add(new PlayCardCommand());
+        this.commands.add(new ShowHandCommand());
+        this.commands.add(new ShowScoreCommand());
+        this.commands.add(new HelpCommand());
+        this.commands.add(new ShowPlayersCommand());
+        this.commands.add(new RulesCommand());
         //TODO: add an exit and/or retry command?
     }
 

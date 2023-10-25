@@ -1,12 +1,11 @@
 package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
-import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
 import java.util.stream.Collectors;
 
-public class showScoreCommand implements Command {
+public class ShowScoreCommand implements Command {
 
     @Override
     public String getCommand() {

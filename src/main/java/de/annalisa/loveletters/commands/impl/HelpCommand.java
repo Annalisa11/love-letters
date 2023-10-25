@@ -5,7 +5,7 @@ import de.annalisa.loveletters.commands.Command;
 
 import java.util.List;
 
-public class helpCommand implements Command {
+public class HelpCommand implements Command {
     @Override
     public String getCommand() {
         return "help";

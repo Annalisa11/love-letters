@@ -3,16 +3,14 @@ package de.annalisa.loveletters.cards;
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.utils.StringHelper;
 
-import java.util.ArrayList;
-
 /**
  * The `Card` class is an abstract base class for representing cards in the Love Letter card game.
  * Each card has a name, effect, and a closeness value. Subclasses of `Card` implement specific card effects.
  */
 public abstract class Card {
-    private String name;
-    private String effect;
-    private int closeness;
+    private final String name;
+    private final String effect;
+    private final int closeness;
 
     /**
      * Creates a new `Card` instance with a specified name, closeness value, and effect.

@@ -1,7 +1,6 @@
 package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
-import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
 import de.annalisa.loveletters.utils.FileHelper;
 import de.annalisa.loveletters.utils.StringHelper;

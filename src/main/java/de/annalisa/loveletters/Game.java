@@ -19,15 +19,13 @@ public class Game {
     private int round = 1;
     private int turns = 0;
     private Card firstCardOfDeck;
-    private ArrayList<Card> threeOpenCards = new ArrayList<>(3);
+    private final ArrayList<Card> threeOpenCards = new ArrayList<>(3);
     private Player currentPlayer;
     private Player roundWinner;
     private Player gameWinner;
-    private ArrayList<Player> players = new ArrayList<>();
-    private ArrayList<Player> activePlayers = new ArrayList<>();
-    private CommandManager commandManager = new CommandManager();
-
-    private boolean playAgain;
+    private final ArrayList<Player> players = new ArrayList<>();
+    private final ArrayList<Player> activePlayers = new ArrayList<>();
+    private final CommandManager commandManager = new CommandManager();
 
     public CommandManager getCommandManager() {
         return commandManager;
@@ -196,9 +194,9 @@ public class Game {
      */
     public int choosePlayerForEffect(List<Player> otherPlayers, String message){
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new);
-        String names = "";
+        StringBuilder names = new StringBuilder();
         for(int i=1; i<=otherPlayers.size(); i++){
-            names += otherPlayers.get(i-1).getName() + (otherPlayers.get(i-1).isImmune() ? " [immune]" : "") +" (" + i + ")  ";
+            names.append(otherPlayers.get(i - 1).getName()).append(otherPlayers.get(i - 1).isImmune() ? " [immune]" : "").append(" (").append(i).append(")  ");
         }
         numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
 

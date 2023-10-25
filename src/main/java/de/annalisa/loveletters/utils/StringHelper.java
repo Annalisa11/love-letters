@@ -14,7 +14,7 @@ public class StringHelper {
     /**
      * Displays an introduction message for the Love Letter game.
      */
-    public static void displayIntroduction(){
+    public static void displayIntroduction() {
         System.out.println("------  Welcome to \uD83D\uDC8C LOVE LETTER! \uD83D\uDC8C ------");
         System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
     }
@@ -33,7 +33,7 @@ public class StringHelper {
         } else if (names.size() == 1) {
             return names.get(0);
         } else {
-            for(int i=0; i<(names.size()-1); i++){
+            for (int i = 0; i < (names.size() - 1); i++) {
                 res.append(names.get(i)).append(", ");
             }
             res = new StringBuilder(res.substring(0, res.length() - 2));
@@ -48,7 +48,7 @@ public class StringHelper {
      *
      * @param openCards The list of open cards.
      */
-    public static void printThreeOpenCards(ArrayList<Card> openCards){
+    public static void printThreeOpenCards(ArrayList<Card> openCards) {
         System.out.println("three open cards:");
         System.out.println(StringHelper.printCardsBesideEachOther(openCards));
     }
@@ -57,12 +57,12 @@ public class StringHelper {
      * Splits a given string into an array of substrings, ensuring that each substring
      * contains a maximum number of characters (or less) and does not cut words in the middle.
      *
-     * @param string    The input string to be split.
-     * @param maxChars  The maximum number of characters allowed in each substring/line.
+     * @param string   The input string to be split.
+     * @param maxChars The maximum number of characters allowed in each substring/line.
      * @return An array of substrings, each of which is less than or equal to maxChars characters in length,
      * and words are not split in the middle. Leading and trailing spaces are trimmed.
      */
-    public static String[] splitStringAtNextSpaceAfterMaxChars(String string, int maxChars){
+    public static String[] splitStringAtNextSpaceAfterMaxChars(String string, int maxChars) {
         if (string.length() <= maxChars) {
             return new String[]{string};
         }
@@ -73,14 +73,14 @@ public class StringHelper {
             int endIndex = Math.min(index + maxChars, string.length());
             String part = string.substring(index, endIndex);
 
-            if(part.contains("\n")){
+            if (part.contains("\n")) {
                 endIndex = string.substring(0, endIndex).indexOf("\n", index); //so that index is from string and matches the index numbers of part. Otherwise, the index would be always too small
                 part = string.substring(index, endIndex);
-                string = string.substring(0, endIndex).concat(string.substring(endIndex+1));
+                string = string.substring(0, endIndex).concat(string.substring(endIndex + 1));
             } else {
-                if (endIndex < string.length() && string.charAt(endIndex-1) != ' ') {
+                if (endIndex < string.length() && string.charAt(endIndex - 1) != ' ') {
                     // check if end char is not a space and if not move endIndex backwards until you find one
-                    while (endIndex > index && string.charAt(endIndex-1) != ' ') {
+                    while (endIndex > index && string.charAt(endIndex - 1) != ' ') {
                         endIndex--;
                     }
                     part = string.substring(index, endIndex);
@@ -91,7 +91,7 @@ public class StringHelper {
             index = endIndex;
 
             // ignore leading spaces in the next string
-            while (index < string.length() && (string.charAt(index) == ' ' )){
+            while (index < string.length() && (string.charAt(index) == ' ')) {
                 index++;
             }
         }

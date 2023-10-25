@@ -12,13 +12,14 @@ import java.util.Scanner;
  */
 public class InputHelper {
     public static Scanner scanner = new Scanner(System.in);
+
     /**
      * Continuously waits for user input and processes it as a command. <br/>
      * This method is suitable for situations where user input is not required for specific numeric values, and the user is free to choose from a list of available commands.
      *
      * @param game The current game instance that will handle the commands.
      */
-    public static void waitForCommandInput(Game game){
+    public static void waitForCommandInput(Game game) {
         CommandManager commandManager = game.getCommandManager();
         boolean scan = true;
         while (scan) {
@@ -70,8 +71,8 @@ public class InputHelper {
      *
      * @return The string entered by the user in the console.
      */
-    public static String getStringFromConsole(){
+    public static String getStringFromConsole() {
         Scanner scanner = new Scanner(System.in);
-            return scanner.nextLine();
-        }
+        return scanner.nextLine();
+    }
 }

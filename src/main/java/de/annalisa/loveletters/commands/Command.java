@@ -31,8 +31,8 @@ public interface Command {
     /**
      * Executes the command based on the fact, if the player is currently playing a game or not.
      *
-     * @param game    The current game instance where the command will be executed.
-     * @param inGame  A boolean indicating whether the command is executed during a game session.
+     * @param game   The current game instance where the command will be executed.
+     * @param inGame A boolean indicating whether the command is executed during a game session.
      * @return {@code false} if the command execution was successful and thus the input loop should stop asking for input, {@code true} otherwise.
      */
     boolean execute(Game game, boolean inGame);

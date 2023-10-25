@@ -5,7 +5,7 @@ import de.annalisa.loveletters.Player;
 
 import java.util.List;
 
-public class King extends Card{
+public class King extends Card {
     public King() {
         super("King", 6, "Trade hands with another player your choice");
     }
@@ -17,10 +17,10 @@ public class King extends Card{
         int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player swap your card with: ");
 
         Player chosenPlayer;
-        if(playerNumber == -1){
+        if (playerNumber == -1) {
             return;
         } else {
-            chosenPlayer = otherPlayers.get(playerNumber-1);
+            chosenPlayer = otherPlayers.get(playerNumber - 1);
         }
 
         //get Cards to swap

@@ -22,7 +22,7 @@ public class Player {
      *
      * @param name The name of the player.
      */
-    public Player(String name){
+    public Player(String name) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.score = 0;
@@ -48,7 +48,7 @@ public class Player {
         return hand;
     }
 
-    public int getScore(){
+    public int getScore() {
         return score;
     }
 
@@ -71,6 +71,7 @@ public class Player {
     }
 
     //Other
+
     /**
      * Resets the player's immunity status to not immune.
      */
@@ -97,7 +98,7 @@ public class Player {
      *
      * @param card The card to add to the player's hand.
      */
-    public void addCardToHand(Card card){
+    public void addCardToHand(Card card) {
         this.hand.add(card);
     }
 
@@ -106,8 +107,8 @@ public class Player {
      *
      * @param index The index of the card to remove from the player's hand.
      */
-    public void removeCardFromHand(int index){
-        if(!hand.isEmpty()){
+    public void removeCardFromHand(int index) {
+        if (!hand.isEmpty()) {
             this.hand.remove(index);
         }
     }
@@ -131,9 +132,9 @@ public class Player {
     /**
      * Updates the player's score based on the sum of the closeness values of the cards on their hand.
      */
-    public void updateScore(){
+    public void updateScore() {
         int res = 0;
-        for(Card card : hand){
+        for (Card card : hand) {
             res += card.getCloseness();
         }
         score = res;
@@ -142,6 +143,7 @@ public class Player {
     //TODO: maybe implement an equals functions? To compare players?
 
     //Comparators
+
     /**
      * A comparator for sorting Player objects based on their scores in descending order.
      * Players with higher scores will appear first in the sorted list.
@@ -153,22 +155,23 @@ public class Player {
          * @param p1 The first Player object to compare.
          * @param p2 The second Player object to compare.
          * @return a negative integer, zero, or a positive integer as the first player's score is
-         *         less than, equal to, or greater than the second player's score.
+         * less than, equal to, or greater than the second player's score.
          */
-        public int compare(Player p1, Player p2){
+        public int compare(Player p1, Player p2) {
             return p2.score - p1.score;
         }
     }
 
     //Formatting
+
     /**
      * Returns a string representation of the player including their name, score, and hand.
-     * @warning should be rewritten to adjust to the new representation of the card/hand.
      *
      * @return A string containing the player's name, score, and hand.
+     * @warning should be rewritten to adjust to the new representation of the card/hand.
      */
     @Override
     public String toString() {
-        return  name + " - " + score + " - " + hand;
+        return name + " - " + score + " - " + hand;
     }
 }

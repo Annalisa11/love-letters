@@ -19,7 +19,7 @@ public abstract class Card {
      * @param closeness The closeness value of the card.
      * @param effect    The effect description of the card.
      */
-    public Card(String name, int closeness, String effect){
+    public Card(String name, int closeness, String effect) {
         this.name = name;
         this.effect = effect;
         this.closeness = closeness;
@@ -45,14 +45,13 @@ public abstract class Card {
     //TODO: maybe implement an equals functions? To compare cards?
 
 
-
     /**
      * Converts the card to a formatted string for display.
      *
      * @return A formatted string representing the card as an actual card-looking card.
      */
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder cardString = new StringBuilder();
 
         String leftAlignFormat = "| %-20s | %4d |";
@@ -64,7 +63,7 @@ public abstract class Card {
 
         String[] effectLines = StringHelper.splitStringAtNextSpaceAfterMaxChars(effect, 27);
         //make every card's length the same adding white space if necessary
-        for (int i=0; i<6; i++){
+        for (int i = 0; i < 6; i++) {
             if (i < effectLines.length) {
                 cardString.append(String.format(effectFormat, effectLines[i])).append("\n");
             } else {

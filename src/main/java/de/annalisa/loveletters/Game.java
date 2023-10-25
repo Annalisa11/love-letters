@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import de.annalisa.loveletters.cards.*;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
@@ -39,7 +40,7 @@ public class Game {
         return deck;
     }
 
-    public Card getFirstCardOfDeck(){
+    public Card getFirstCardOfDeck() {
         return firstCardOfDeck;
     }
 
@@ -54,7 +55,7 @@ public class Game {
     /**
      * Initializes a new Love Letter card game session.
      */
-    public Game(){
+    public Game() {
         StringHelper.displayIntroduction();
         InputHelper.waitForCommandInput(this);
     }
@@ -62,7 +63,7 @@ public class Game {
     /**
      * Starts the Love Letter game.
      */
-    public void startGame(){
+    public void startGame() {
         commandManager.setInGame(true);
         System.out.println("Before we start with the game, let's define the players.");
         createPlayers();
@@ -76,8 +77,8 @@ public class Game {
             System.out.println("\n-------");
             firstCardOfDeck = deck.getTopCard();
             System.out.println("first card of the deck was drawn and set aside..."); // remove later, first card should not be visible
-            if(players.size() == 2){
-                for(int i=0; i < 3; i++){
+            if (players.size() == 2) {
+                for (int i = 0; i < 3; i++) {
                     threeOpenCards.add(deck.getTopCard());
                 }
                 System.out.println("The next three cards were drawn and set aside, face up, so you can see them...");
@@ -92,7 +93,7 @@ public class Game {
 
             //start round
             startRound();
-        } while(!calculateWinnerOfGame());
+        } while (!calculateWinnerOfGame());
 
         System.out.println("\n\n----------------");
         System.out.println("Congratulations \uD83D\uDC8C" + gameWinner.getName() + "\uD83D\uDC8C, you win!");
@@ -106,13 +107,13 @@ public class Game {
         System.out.println("------");
         System.out.println("\uD83D\uDC95 START ROUND " + round + " \uD83D\uDC95");
         System.out.println("PLAYERS: " + StringHelper.printOnlyNames(activePlayers));
-        System.out.println("TOKENS: " + players.stream().map(player ->  player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
+        System.out.println("TOKENS: " + players.stream().map(player -> player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
 
-        while(deck.getNumberOfCards() != 0){
-            if(turns > activePlayers.size()-1){
+        while (deck.getNumberOfCards() != 0) {
+            if (turns > activePlayers.size() - 1) {
                 turns = 0;
             }
-            if (roundWinner != null){
+            if (roundWinner != null) {
                 currentPlayer = roundWinner;
                 turns = activePlayers.indexOf(roundWinner);
                 roundWinner = null;
@@ -123,7 +124,7 @@ public class Game {
             takeTurn(currentPlayer);
             turns++;
 
-            if(activePlayers.size() == 1){
+            if (activePlayers.size() == 1) {
                 break;
             }
         }
@@ -131,7 +132,7 @@ public class Game {
         System.out.println("End of Round " + round + "!");
         calculateWinnerOfRound();
         calculateWinnerOfGame();
-        System.out.println("the winner is: " + roundWinner.getName() );
+        System.out.println("the winner is: " + roundWinner.getName());
         //reset stats for next round
         players.forEach(player -> {
             player.clearHand();
@@ -150,15 +151,15 @@ public class Game {
      *
      * @param player The player taking their turn.
      */
-    private void takeTurn(Player player){
+    private void takeTurn(Player player) {
         System.out.println("\n=== " + player.getName() + ", it's your turn! ===");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
-        if(player.isImmune()){
+        if (player.isImmune()) {
             System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
             player.setImmune();
         }
         //draw card
-        if(!(player.getTurn() == 1)){
+        if (!(player.getTurn() == 1)) {
             Card drawnCard = deck.getTopCard();
             player.addCardToHand(drawnCard);
         }
@@ -172,13 +173,14 @@ public class Game {
     }
 
     //other helper functions
+
     /**
      * Retrieves other players excluding the current player.
      *
      * @param currentPlayer The name of the current player.
      * @return A list of other players.
      */
-    public List<Player> getOtherPlayersExcludingCurrent(String currentPlayer){
+    public List<Player> getOtherPlayersExcludingCurrent(String currentPlayer) {
         return activePlayers.stream().filter(player -> !Objects.equals(player.getName(), currentPlayer)).toList(); //remove current player from possible candidates
     }
 
@@ -192,16 +194,16 @@ public class Game {
      *      <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
      * </ul>
      */
-    public int choosePlayerForEffect(List<Player> otherPlayers, String message){
+    public int choosePlayerForEffect(List<Player> otherPlayers, String message) {
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new);
         StringBuilder names = new StringBuilder();
-        for(int i=1; i<=otherPlayers.size(); i++){
+        for (int i = 1; i <= otherPlayers.size(); i++) {
             names.append(otherPlayers.get(i - 1).getName()).append(otherPlayers.get(i - 1).isImmune() ? " [immune]" : "").append(" (").append(i).append(")  ");
         }
-        numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index-1).isImmune()).toArray(Integer[]::new);
+        numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index - 1).isImmune()).toArray(Integer[]::new);
 
         //All players immune
-        if(numbers.length == 0){
+        if (numbers.length == 0) {
             System.out.println("All players are immune.");
             System.out.println("Effect is not applied. More luck next time ;)");
             return -1;
@@ -213,13 +215,13 @@ public class Game {
     /**
      * Knocks out a player from the game.
      *
-     * @param player         The player to be knocked out.
-     * @param currentPlayer   The current player who is knocking out the other player.
+     * @param player        The player to be knocked out.
+     * @param currentPlayer The current player who is knocking out the other player.
      */
-    public void knockOutPlayer(Player player, Player currentPlayer){
+    public void knockOutPlayer(Player player, Player currentPlayer) {
         int indexOfPlayer = activePlayers.indexOf(player);
         int indexOfCurrentPlayer = activePlayers.indexOf(currentPlayer);
-        if(indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer !=( activePlayers.size()-1)){
+        if (indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer != (activePlayers.size() - 1)) {
             turns--;
         }
         activePlayers.remove(player);
@@ -231,8 +233,8 @@ public class Game {
      * @param players The list of players.
      */
     private void allPlayersDrawCard(ArrayList<Player> players) {
-        for(Player player : players){
-            for(int i=0; i<2; i++){
+        for (Player player : players) {
+            for (int i = 0; i < 2; i++) {
                 player.addCardToHand(deck.getTopCard());
             }
             player.updateScore();
@@ -244,9 +246,9 @@ public class Game {
      */
     private void createPlayers() {
         int numberOfPlayers;
-        numberOfPlayers = InputHelper.validateInputNumbers(new Integer[]{2,3,4}, "With how many players do you want to play? (2,3,4)");
-        for(int i = 0; i < numberOfPlayers; i++){
-            System.out.println("What should player " + (i+1) + " be called?");
+        numberOfPlayers = InputHelper.validateInputNumbers(new Integer[]{2, 3, 4}, "With how many players do you want to play? (2,3,4)");
+        for (int i = 0; i < numberOfPlayers; i++) {
+            System.out.println("What should player " + (i + 1) + " be called?");
             String name = InputHelper.getStringFromConsole();
             Player player = new Player(name);
             players.add(player);
@@ -272,11 +274,11 @@ public class Game {
     /**
      * Finds the index of a card with a specific closeness value in a player's hand.
      *
-     * @param player     The player whose hand is being searched.
-     * @param closeness  The closeness value to search for in the player's hand.
+     * @param player    The player whose hand is being searched.
+     * @param closeness The closeness value to search for in the player's hand.
      * @return The index of the first card with the specified closeness value in the player's hand, or -1 if not found.
      */
-    public static int getIndexOfCardInHand(Player player, int closeness){
+    public static int getIndexOfCardInHand(Player player, int closeness) {
         return IntStream.range(0, player.getHand().size())
                 .filter(i -> player.getHand().get(i).getCloseness() == closeness).findFirst().orElse(-1);
     }
@@ -284,11 +286,11 @@ public class Game {
     /**
      * Gets the index of the other card in the player's hand, excluding a specific card by closeness.
      *
-     * @param player                    The player whose hand is being searched.
-     * @param closenessOfCardToIgnore   The closeness value of the card to be ignored.
+     * @param player                  The player whose hand is being searched.
+     * @param closenessOfCardToIgnore The closeness value of the card to be ignored.
      * @return The index of the other card in the player's hand.
      */
-    public static int getIndexOfOtherCardOnHand(Player player, int closenessOfCardToIgnore){
+    public static int getIndexOfOtherCardOnHand(Player player, int closenessOfCardToIgnore) {
         Card otherCard = player.getHand().stream().filter(card -> card.getCloseness() != closenessOfCardToIgnore).findFirst().orElse(player.getHand().get(0));
         return Game.getIndexOfCardInHand(player, otherCard.getCloseness());
     }
@@ -300,7 +302,7 @@ public class Game {
      * @param closeness The closeness value to check for in the player's hand.
      * @return True if the player's hand contains a card with the specified closeness; otherwise false.
      */
-    public boolean isSpecificCardOnHand(Player player, int closeness){
+    public boolean isSpecificCardOnHand(Player player, int closeness) {
         return player.getHand().stream().anyMatch(card -> card.getCloseness() == closeness);
     }
 
@@ -311,28 +313,28 @@ public class Game {
      * @return The index of the chosen card in the player's hand (0 or 1).
      */
     public int chooseCardToPlay(Player player) {
-        return InputHelper.validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + StringHelper.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
+        return InputHelper.validateInputNumbers(new Integer[]{1, 2}, "Which card do you want to discard?\n" + StringHelper.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
     }
 
     //winning functions
+
     /**
      * Determines the winner of the game based on the number of needed love tokens.
      *
      * @param neededTokens The number of love tokens required to win the game.
      * @return {@code true} if there is a game winner, {@code false} if no winner has been decided yet.
      */
-    private boolean decideWinner(int neededTokens){
+    private boolean decideWinner(int neededTokens) {
         List<Player> winners = players.stream().filter(player -> player.getLoveToken() == neededTokens).toList();
-        if(winners.isEmpty()){
+        if (winners.isEmpty()) {
             return false;
-        }else if (winners.size() == 1) {
+        } else if (winners.size() == 1) {
             gameWinner = winners.get(0);
             return true;
-        }
-        else {
+        } else {
             int index;
             System.out.println("There is a tie! Who went most recently on a date?");
-            index = InputHelper.validateInputNumbers(new Integer[]{1,2}, winners.get(0) + "(1) or " + winners.get(1) + "(2)");
+            index = InputHelper.validateInputNumbers(new Integer[]{1, 2}, winners.get(0) + "(1) or " + winners.get(1) + "(2)");
             gameWinner = winners.get(index);
             return true;
         }
@@ -357,7 +359,7 @@ public class Game {
      * The winner of the round is awarded a love token.
      */
     private void calculateWinnerOfRound() {
-        if(activePlayers.size() > 1){
+        if (activePlayers.size() > 1) {
             activePlayers.sort(new Player.sortByScore());
         }
         roundWinner = activePlayers.get(0);

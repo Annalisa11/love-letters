@@ -2,7 +2,7 @@ package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
 
-public class Handmaid extends Card{
+public class Handmaid extends Card {
     public Handmaid() {
         super("Handmaid", 4, "Until your next turn, ignore all effects from other players' cards.");
     }

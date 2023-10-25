@@ -6,7 +6,7 @@ import de.annalisa.loveletters.utils.StringHelper;
 
 import java.util.List;
 
-public class Priest extends Card{
+public class Priest extends Card {
     public Priest() {
         super("Priest", 2, "Look at another player's hand");
     }
@@ -16,9 +16,9 @@ public class Priest extends Card{
         Player currentPlayer = game.getCurrentPlayer();
         List<Player> otherPlayers = game.getOtherPlayersExcludingCurrent(currentPlayer.getName());
         //there is at least one player who isn't immune
-        if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
+        if (otherPlayers.stream().anyMatch(player -> !player.isImmune())) {
             int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
-            Player chosenPlayer = otherPlayers.get(playerNumber-1);
+            Player chosenPlayer = otherPlayers.get(playerNumber - 1);
             System.out.println(chosenPlayer.getName() + " has following cards: \n" + StringHelper.printCardsBesideEachOther(chosenPlayer.getHand()));
             return;
         }

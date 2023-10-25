@@ -18,7 +18,7 @@ public class Deck {
     /**
      * Initializes a new empty deck with no cards.
      */
-    public Deck(){
+    public Deck() {
         this.cards = new ArrayList<>();
         this.numberOfCards = 0;
     }
@@ -33,9 +33,9 @@ public class Deck {
      *
      * @return The top card of the deck.
      */
-    public Card getTopCard(){
-        Card topCard = cards.get(cards.size()-1);
-        cards.remove((cards.size()-1));
+    public Card getTopCard() {
+        Card topCard = cards.get(cards.size() - 1);
+        cards.remove((cards.size() - 1));
         numberOfCards--;
         return topCard;
     }
@@ -46,8 +46,8 @@ public class Deck {
      * @param firstCard The card to use as a fallback if the deck is empty. Normally the first card of the deck that was drawn in the beginning.
      * @return The top card of the deck if available; otherwise the fallback card.
      */
-    public Card getTopCardWithSpecialFallback(Card firstCard){
-        if(cards.isEmpty()){
+    public Card getTopCardWithSpecialFallback(Card firstCard) {
+        if (cards.isEmpty()) {
             return firstCard;
         }
         return getTopCard();
@@ -58,7 +58,7 @@ public class Deck {
      *
      * @param card The card to be added to the deck.
      */
-    public void addCard(Card card){
+    public void addCard(Card card) {
         cards.add(card);
         numberOfCards++;
     }
@@ -69,8 +69,8 @@ public class Deck {
      * @param card The card to be added to the deck.
      * @param n    The number of times the card should be added.
      */
-    public void addSameCardNTimes(Card card, int n){
-        for (int i=0; i<n; i++){
+    public void addSameCardNTimes(Card card, int n) {
+        for (int i = 0; i < n; i++) {
             addCard(card);
         }
     }
@@ -78,10 +78,10 @@ public class Deck {
     /**
      * Shuffles the cards in the deck to randomize their order.
      */
-    public void shuffleDeck(){
+    public void shuffleDeck() {
         ArrayList<Card> unshuffled = new ArrayList<>(cards);
         ArrayList<Card> shuffled = new ArrayList<>();
-        while(!unshuffled.isEmpty()){
+        while (!unshuffled.isEmpty()) {
             Card card = unshuffled.get(random.nextInt(unshuffled.size()));
             unshuffled.remove(card);
             shuffled.add(card);
@@ -92,21 +92,21 @@ public class Deck {
     /**
      * Clears the deck, removing all cards.
      */
-    public void clearDeck(){
+    public void clearDeck() {
         cards.clear();
         numberOfCards = 0;
     }
 
     /**
      * Converts the deck to a formatted string containing the representations of its cards.
-     * @warning should be written anew, since the UI of cards has been changed.
      *
      * @return A formatted string representing the deck, including its cards.
+     * @warning should be written anew, since the UI of cards has been changed.
      */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for(Card card: cards){
+        for (Card card : cards) {
             result.append(card);
         }
         return result.toString();

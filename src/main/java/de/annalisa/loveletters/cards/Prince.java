@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Prince extends Card{
+public class Prince extends Card {
 
     public Prince() {
         super("Prince", 5, "Choose any player (including yourself) to discard his or her hand and draw a new card");
@@ -19,15 +19,15 @@ public class Prince extends Card{
 
         List<Player> allPlayers = game.getActivePlayers();
         //there is at least one player who isn't immune (always true because of currentPlayer)
-        if (allPlayers.stream().anyMatch(player -> !player.isImmune())){
+        if (allPlayers.stream().anyMatch(player -> !player.isImmune())) {
             int playerNumber = game.choosePlayerForEffect(allPlayers, "Choose a player who has to discard and draw a new card: ");
-            Player chosenPlayer = allPlayers.get(playerNumber-1);
+            Player chosenPlayer = allPlayers.get(playerNumber - 1);
 
             //effect logic
             List<Card> hand = chosenPlayer.getHand();
             int cardToDropIndex = Game.getIndexOfOtherCardOnHand(chosenPlayer, 5);
             Card removedCard = hand.get(cardToDropIndex);
-            if(removedCard.getCloseness() == 8){
+            if (removedCard.getCloseness() == 8) {
                 game.knockOutPlayer(chosenPlayer, currentPlayer);
                 System.out.println(chosenPlayer.getName() + " had to discard the Princess... what a shame, " + chosenPlayer.getName() + " is knocked out!");
                 return;

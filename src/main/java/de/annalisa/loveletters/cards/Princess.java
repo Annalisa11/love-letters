@@ -3,7 +3,7 @@ package de.annalisa.loveletters.cards;
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 
-public class Princess extends Card{
+public class Princess extends Card {
     public Princess() {
         super("Princess", 8, "If you discard this card, you are out of the round");
     }

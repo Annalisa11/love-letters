@@ -12,7 +12,7 @@ public class CommandManager {
 
     private boolean inGame = false;
 
-    public CommandManager(){
+    public CommandManager() {
         this.commands.add(new StartCommand());
         this.commands.add(new PlayCardCommand());
         this.commands.add(new ShowHandCommand());
@@ -31,7 +31,7 @@ public class CommandManager {
         inGame = value;
     }
 
-    public boolean isCommand(String input){
+    public boolean isCommand(String input) {
         return input.startsWith("\\");
     }
 
@@ -40,16 +40,15 @@ public class CommandManager {
      *
      * @param input The user's input, which is tested to determine if it is a valid command starting with a backslash ('\').
      * @param game  The current game instance.
-     * @return
-     * <ul>
+     * @return <ul>
      *   <li><code>true</code> - Returns <code>true</code> if the input is not a valid command, and the loop should keep asking for new input.</li>
      *   <li><code>false</code> - Returns <code>false</code> if the command has been successfully carried out, and the loop should stop asking.</li>
      * </ul>
      */
-    public boolean handleInput(String input, Game game){
+    public boolean handleInput(String input, Game game) {
         String strippedInput = input.substring(1);
         Optional<Command> commandToExecute = commands.stream().filter(command -> command.getCommand().equals(strippedInput)).findFirst();
-        if (commandToExecute.isEmpty()){
+        if (commandToExecute.isEmpty()) {
             return true;
         }
         return commandToExecute.get().execute(game, inGame);

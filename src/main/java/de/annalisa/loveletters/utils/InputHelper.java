@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * The InputHelper class provides utility methods for handling user input in the Love Letter game.
+ */
 public class InputHelper {
     /**
      * Continuously waits for user input and processes it as a command. <br/>

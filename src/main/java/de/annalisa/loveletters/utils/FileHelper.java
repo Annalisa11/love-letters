@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
+/**
+ * The FileHelper class provides utility methods for reading and retrieving the contents of a file.
+ */
 public class FileHelper {
     /**
      * Reads and retrieves the contents of a file from the resources directory.

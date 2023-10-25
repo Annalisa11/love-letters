@@ -6,6 +6,10 @@ import de.annalisa.loveletters.cards.Card;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * The StringHelper class provides utility methods for handling strings, text formatting, and console output in the Love Letter game.
+ */
 public class StringHelper {
     /**
      * Displays an introduction message for the Love Letter game.

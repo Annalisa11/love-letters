@@ -4,6 +4,7 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
+import de.annalisa.loveletters.utils.StringHelper;
 
 public class ShowHandCommand implements Command {
     @Override
@@ -29,7 +30,7 @@ public class ShowHandCommand implements Command {
         }
         Player player = game.getCurrentPlayer();
         System.out.println("You have these cards on your hand:");
-        System.out.println(Card.printCardsBesideEachOther(player.getHand()));
+        System.out.println(StringHelper.printCardsBesideEachOther(player.getHand()));
         return true;
     }
 }

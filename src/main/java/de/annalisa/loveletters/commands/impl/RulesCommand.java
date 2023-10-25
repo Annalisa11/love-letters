@@ -4,6 +4,7 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
 import de.annalisa.loveletters.utils.FileHelper;
+import de.annalisa.loveletters.utils.StringHelper;
 
 public class RulesCommand implements Command {
     private final String[] rules;
@@ -18,7 +19,7 @@ public class RulesCommand implements Command {
     public RulesCommand(){
         String rulesText = FileHelper.readFileFromResources(RULES_PATH);
         if(rulesText != null){
-            rules = Card.splitStringAtNextSpaceAfterMaxChars(rulesText, 80);
+            rules = StringHelper.splitStringAtNextSpaceAfterMaxChars(rulesText, 80);
         } else {
             rules = new String[]{"Oh no.. something went wrong :("};
         }

@@ -2,6 +2,7 @@ package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
+import de.annalisa.loveletters.utils.StringHelper;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Priest extends Card{
         if (otherPlayers.stream().anyMatch(player -> !player.isImmune())){
             int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
             Player chosenPlayer = otherPlayers.get(playerNumber-1);
-            System.out.println(chosenPlayer.getName() + " has following cards: \n" + Card.printCardsBesideEachOther(chosenPlayer.getHand()));
+            System.out.println(chosenPlayer.getName() + " has following cards: \n" + StringHelper.printCardsBesideEachOther(chosenPlayer.getHand()));
             return;
         }
         System.out.println("All players are immune.");

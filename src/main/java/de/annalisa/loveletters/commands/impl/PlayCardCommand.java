@@ -4,6 +4,7 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.Command;
+import de.annalisa.loveletters.utils.StringHelper;
 
 public class PlayCardCommand implements Command {
     @Override
@@ -31,7 +32,7 @@ public class PlayCardCommand implements Command {
         int chosenCard;
         if(game.isSpecificCardOnHand(player, 7) && (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5)) ){
             System.out.println("Oh no! Look at your cards!");
-            Card.printCardsBesideEachOther(player.getHand());
+            StringHelper.printCardsBesideEachOther(player.getHand());
             System.out.println("The Countess doesn't want to be near the king or the prince.. you have to discard her!");
             chosenCard = Game.getIndexOfCardInHand(player, 7);
         } else {

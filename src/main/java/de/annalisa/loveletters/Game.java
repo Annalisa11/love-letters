@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import de.annalisa.loveletters.cards.*;
 import de.annalisa.loveletters.utils.InputHelper;
+import de.annalisa.loveletters.utils.StringHelper;
 
 /**
  * The `Game` class represents a Love Letter card game session. It manages the game flow, player interactions, and scoring.
@@ -56,7 +57,7 @@ public class Game {
      * Initializes a new Love Letter card game session.
      */
     public Game(){
-        displayIntroduction();
+        StringHelper.displayIntroduction();
         InputHelper.waitForCommandInput(this);
     }
 
@@ -82,7 +83,7 @@ public class Game {
                     threeOpenCards.add(deck.getTopCard());
                 }
                 System.out.println("The next three cards were drawn and set aside, face up, so you can see them...");
-                printThreeOpenCards(threeOpenCards);
+                StringHelper.printThreeOpenCards(threeOpenCards);
             }
             System.out.println("-------\n\n");
 
@@ -106,7 +107,7 @@ public class Game {
     private void startRound() {
         System.out.println("------");
         System.out.println("\uD83D\uDC95 START ROUND " + round + " \uD83D\uDC95");
-        System.out.println("PLAYERS: " + printOnlyNames(activePlayers));
+        System.out.println("PLAYERS: " + StringHelper.printOnlyNames(activePlayers));
         System.out.println("TOKENS: " + players.stream().map(player ->  player.getName() + " (" + player.getLoveToken() + ")").collect(Collectors.joining("   ")));
 
         while(deck.getNumberOfCards() != 0){
@@ -170,50 +171,6 @@ public class Game {
         player.incrementTurn();
         //play card
         InputHelper.waitForCommandInput(this);
-    }
-
-    //formatting helper functions
-    /**
-     * Displays an introduction message for the Love Letter game.
-     */
-    private void displayIntroduction(){
-        System.out.println("------  Welcome to \uD83D\uDC8C LOVE LETTER! \uD83D\uDC8C ------");
-        System.out.println("To start the game write '\\start'. To see other commands write '\\help'.");
-    }
-
-    /**
-     * Prints the names of the players.
-     *
-     * @param players The list of players.
-     * @return A formatted string containing the names of the players.
-     */
-    public String printOnlyNames(ArrayList<Player> players){
-        //TODO: use a string builder? Make it more elegant...
-        List<String> names = players.stream().map(Player::getName).toList();
-        String res = "";
-        if (names.size() == 2) {
-            return names.get(0) + " and " + names.get(1);
-        } else if (names.size() == 1) {
-            return names.get(0);
-        } else {
-            for(int i=0; i<(names.size()-1); i++){
-                res += names.get(i) + ", ";
-            }
-            res = res.substring(0, res.length() - 2);
-            res += " and " + names.get(names.size() -1);
-        }
-        return res;
-    }
-
-
-    /**
-     * Prints the three open cards in the game.
-     *
-     * @param openCards The list of open cards.
-     */
-    public void printThreeOpenCards(ArrayList<Card> openCards){
-        System.out.println("three open cards:");
-        System.out.println(Card.printCardsBesideEachOther(openCards));
     }
 
     //other helper functions
@@ -356,7 +313,7 @@ public class Game {
      * @return The index of the chosen card in the player's hand (0 or 1).
      */
     public int chooseCardToPlay(Player player) {
-        return InputHelper.validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + Card.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
+        return InputHelper.validateInputNumbers(new Integer[]{1,2}, "Which card do you want to discard?\n" + StringHelper.printCardsBesideEachOther(player.getHand()) + player.getHand().get(0).getName() + " (1) or " + player.getHand().get(1).getName() + " (2)");
     }
 
     //winning functions
@@ -410,9 +367,6 @@ public class Game {
         //winner gets token
         roundWinner.addLoveToken(1);
     }
-
-    //input helper functions
-
 
     /**
      * The main entry point of the Love Letter game application.

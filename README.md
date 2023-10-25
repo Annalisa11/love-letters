@@ -11,6 +11,8 @@ A project developed during the course SEP (Softwareentwicklungspraktikum) at the
   - [Mandatory Features](#mandatory-features)
   - [Additional Features](#additional-features)
 - [How to run it](#-how-to-run-it)
+  - [Run the game](#run-the-game)
+  - [See emojis](#see-emojis)
 - [UML diagram](#-uml-diagram)
 - [Author](#-author)
 
@@ -71,24 +73,37 @@ A player wins the game after winning a number of tokens based on the number of p
 
 ### Mandatory features
 - Various **commands** have to be implemented.   
-    (help, start, showHand, showScore, playCard)
-- Users have to be able to choose the **number of players**
+    (help, start, showHand, showScore, playCard, showPlayers)
+- Users must be able to choose the **number of players** and their **names**
+- The game should be **playable** in the version for **2-4 players**.
+- invalid inputs and errors should be handled
 ### Additional features
-- ~~Other Commands~~
+- Other Commands  
+  (rules)
 - ~~Colorful Console Output~~
+- more beautiful UI in terminal with special cards display and emojis
 
 ## 🚀 How to run it 
 
->**Prerequisites:**  
->you have to have Java installed on your computer (developed in Java 19).
+>:warning: **Prerequisites:**  
+>- Java 19 or higher installed
+>- UTF-8 encoding enabled
 
+### Run the game
 1. Go to the [artifacts folder](out/artifacts) _(out/artifacts)_ and download the `.jar` file.   
 2. Go to the location where you saved the file on your computer and open the terminal.  
 3. Paste this command into the terminal and press enter.
-```bash
+```batch
 java -jar LoveLetters.jar
 ```
 The game should start now... enjoy :)
+
+### See Emojis
+if you see `?` instead of emojis you possibly have to enable UTF-8 encoding on your computer.   
+For Windows you can try following steps:  
+1. Go to Windows Settings > Time & Language > Language > Administrative language settings > change system locale
+2. check the box 'Beta: Use Unicode UTF-8 for worldwide language support'
+3. restart your computer
 
 ## 📉 UML diagram 
 

@@ -79,7 +79,7 @@ A player wins the game after winning a number of tokens based on the number of p
 - invalid inputs and errors should be handled
 ### Additional features
 - Other Commands  
-  (rules)
+  (rules, exit)
 - ~~Colorful Console Output~~
 - more beautiful UI in terminal with special cards display and emojis
 

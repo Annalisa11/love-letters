@@ -1,7 +1,7 @@
 package de.annalisa.loveletters.commands;
 
 import de.annalisa.loveletters.Game;
-import de.annalisa.loveletters.utils.ExitGameException;
+import de.annalisa.loveletters.exceptions.ExitGameException;
 
 /**
  * The `Command` interface defines the structure for implementing different game commands in the Love Letter game.

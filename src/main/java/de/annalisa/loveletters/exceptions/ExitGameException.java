@@ -1,4 +1,4 @@
-package de.annalisa.loveletters.utils;
+package de.annalisa.loveletters.exceptions;
 
 /**
  * The `ExitGameException` is a custom exception class.

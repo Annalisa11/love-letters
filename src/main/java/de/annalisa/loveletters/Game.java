@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import de.annalisa.loveletters.cards.*;
-import de.annalisa.loveletters.utils.ExitGameException;
+import de.annalisa.loveletters.exceptions.ExitGameException;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
 

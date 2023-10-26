@@ -2,7 +2,7 @@ package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.commands.Command;
-import de.annalisa.loveletters.utils.ExitGameException;
+import de.annalisa.loveletters.exceptions.ExitGameException;
 
 public class ExitCommand implements Command {
     @Override

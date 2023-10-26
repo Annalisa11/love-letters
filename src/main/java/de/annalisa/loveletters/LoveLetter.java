@@ -1,6 +1,6 @@
 package de.annalisa.loveletters;
 
-import de.annalisa.loveletters.utils.ExitGameException;
+import de.annalisa.loveletters.exceptions.ExitGameException;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
 

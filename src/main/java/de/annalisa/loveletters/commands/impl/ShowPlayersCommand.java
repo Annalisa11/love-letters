@@ -28,10 +28,11 @@ public class ShowPlayersCommand implements Command {
             System.out.println("❗ you have start the game to see the players.");
             return true;
         }
-        List<Player> players = game.getActivePlayers();
+        List<Player> players = game.getPlayers();
+        List<Player> activePlayers = game.getActivePlayers();
 
         for(Player player: players){
-            System.out.println(((players.contains(player) ? "\uD83C\uDF1F " : "\uD83D\uDC94 " ) + player.getName() + " " + (players.contains(player) ? "(active)" : "(knocked out)") + (player.isImmune() ? "  [immune] \uD83D\uDD12" : "")));
+            System.out.println(((activePlayers.contains(player) ? "\uD83C\uDF1F " : "\uD83D\uDC94 " ) + player.getName() + " " + (activePlayers.contains(player) ? "(active)" : "(knocked out)") + (player.isImmune() ? "  [immune] \uD83D\uDD12" : "")));
         }
         return true;
     }

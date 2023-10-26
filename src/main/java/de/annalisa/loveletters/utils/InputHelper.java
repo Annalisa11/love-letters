@@ -2,6 +2,7 @@ package de.annalisa.loveletters.utils;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.commands.CommandManager;
+import de.annalisa.loveletters.exceptions.ExitGameException;
 
 import java.util.Arrays;
 import java.util.InputMismatchException;

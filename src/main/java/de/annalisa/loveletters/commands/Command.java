@@ -1,6 +1,7 @@
 package de.annalisa.loveletters.commands;
 
 import de.annalisa.loveletters.Game;
+import de.annalisa.loveletters.utils.ExitGameException;
 
 /**
  * The `Command` interface defines the structure for implementing different game commands in the Love Letter game.
@@ -34,6 +35,7 @@ public interface Command {
      * @param game   The current game instance where the command will be executed.
      * @param inGame A boolean indicating whether the command is executed during a game session.
      * @return {@code false} if the command execution was successful and thus the input loop should stop asking for input, {@code true} otherwise.
+     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    boolean execute(Game game, boolean inGame);
+    boolean execute(Game game, boolean inGame) throws ExitGameException;
 }

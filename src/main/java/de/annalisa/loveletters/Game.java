@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import de.annalisa.loveletters.cards.*;
+import de.annalisa.loveletters.utils.ExitGameException;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
 
@@ -56,14 +57,16 @@ public class Game {
      * Initializes a new Love Letter card game session.
      */
     public Game() {
-        StringHelper.displayIntroduction();
-        InputHelper.waitForCommandInput(this);
+
     }
+
 
     /**
      * Starts the Love Letter game.
+     *
+     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    public void startGame() {
+    public void startGame() throws ExitGameException {
         commandManager.setInGame(true);
         System.out.println("Before we start with the game, let's define the players.");
         createPlayers();
@@ -102,8 +105,10 @@ public class Game {
 
     /**
      * Starts a new round of the game.
+     *
+     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    private void startRound() {
+    private void startRound() throws ExitGameException {
         System.out.println("------");
         System.out.println("\uD83D\uDC95 START ROUND " + round + " \uD83D\uDC95");
         System.out.println("PLAYERS: " + StringHelper.printOnlyNames(activePlayers));
@@ -150,8 +155,9 @@ public class Game {
      * Takes a turn for the given player.
      *
      * @param player The player taking their turn.
+     *               @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    private void takeTurn(Player player) {
+    private void takeTurn(Player player) throws ExitGameException {
         System.out.println("\n=== " + player.getName() + ", it's your turn! ===");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
         if (player.isImmune()) {
@@ -366,14 +372,5 @@ public class Game {
 
         //winner gets token
         roundWinner.addLoveToken(1);
-    }
-
-    /**
-     * The main entry point of the Love Letter game application.
-     *
-     * @param args The command-line arguments passed to the application (not used in LoveLetters).
-     */
-    public static void main(String[] args) {
-        new Game();
     }
 }

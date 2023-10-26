@@ -18,8 +18,9 @@ public class InputHelper {
      * This method is suitable for situations where user input is not required for specific numeric values, and the user is free to choose from a list of available commands.
      *
      * @param game The current game instance that will handle the commands.
+     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    public static void waitForCommandInput(Game game) {
+    public static void waitForCommandInput(Game game) throws ExitGameException {
         CommandManager commandManager = game.getCommandManager();
         boolean scan = true;
         while (scan) {
@@ -41,10 +42,6 @@ public class InputHelper {
      * @param message     The prompt message displayed to the user.
      * @param exceptions  An optional array of values that are considered exceptions and will not be treated as valid.
      * @return The valid integer input provided by the user.
-     * <ul>
-     *     <li><code>-1</code> - Returns <code>-1</code> if all players are immune.</li>
-     *     <li><code>200</code> - Returns <code>200</code> if all players are immune AND the player wants to apply the Prince effect and therefore has to choose himself.</li>
-     * </ul>
      * @throws InputMismatchException If the user enters a non-integer value.
      */
     public static int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions) {

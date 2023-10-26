@@ -2,6 +2,7 @@ package de.annalisa.loveletters.commands;
 
 import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.commands.impl.*;
+import de.annalisa.loveletters.utils.ExitGameException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class CommandManager {
         this.commands.add(new HelpCommand());
         this.commands.add(new ShowPlayersCommand());
         this.commands.add(new RulesCommand());
+        this.commands.add(new ExitCommand());
         //TODO: add an exit and/or retry command?
     }
 
@@ -44,8 +46,9 @@ public class CommandManager {
      *   <li><code>true</code> - Returns <code>true</code> if the input is not a valid command, and the loop should keep asking for new input.</li>
      *   <li><code>false</code> - Returns <code>false</code> if the command has been successfully carried out, and the loop should stop asking.</li>
      * </ul>
+     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
-    public boolean handleInput(String input, Game game) {
+    public boolean handleInput(String input, Game game) throws ExitGameException {
         String strippedInput = input.substring(1);
         Optional<Command> commandToExecute = commands.stream().filter(command -> command.getCommand().equals(strippedInput)).findFirst();
         if (commandToExecute.isEmpty()) {

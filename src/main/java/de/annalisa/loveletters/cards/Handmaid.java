@@ -9,7 +9,7 @@ public class Handmaid extends Card {
 
     @Override
     public void applyEffect(Game game) {
-        System.out.println("NOTE: You are now immune to other effects for one round.");
+        System.out.println("NOTE \uD83D\uDD12: You are now immune to other effects for one round.");
         game.getCurrentPlayer().setImmune();
     }
 }

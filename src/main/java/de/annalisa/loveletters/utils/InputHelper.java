@@ -18,7 +18,7 @@ public class InputHelper {
      * This method is suitable for situations where user input is not required for specific numeric values, and the user is free to choose from a list of available commands.
      *
      * @param game The current game instance that will handle the commands.
-     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
+     * @throws ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
     public static void waitForCommandInput(Game game) throws ExitGameException {
         CommandManager commandManager = game.getCommandManager();
@@ -28,7 +28,7 @@ public class InputHelper {
             if (commandManager.isCommand(input)) {
                 scan = commandManager.handleInput(input, game);
             } else {
-                System.out.println("⚠ Input not valid. Check out valid commands with '\\help.");
+                System.out.println("⚠ Input not valid. Check out valid commands with '\\help'.");
             }
         }
     }
@@ -40,11 +40,10 @@ public class InputHelper {
      *
      * @param validValues An array of valid integer values that the user's input can match.
      * @param message     The prompt message displayed to the user.
-     * @param exceptions  An optional array of values that are considered exceptions and will not be treated as valid.
      * @return The valid integer input provided by the user.
      * @throws InputMismatchException If the user enters a non-integer value.
      */
-    public static int validateInputNumbers(Integer[] validValues, String message, Integer... exceptions) {
+    public static int validateInputNumbers(Integer[] validValues, String message) {
         int input;
         while (true) {
             System.out.println(message);
@@ -52,8 +51,8 @@ public class InputHelper {
             try {
                 input = Integer.parseInt(inputString);
 
-                if (!Arrays.asList(validValues).contains(input) || Arrays.asList(exceptions).contains(input)) {
-                    System.out.println("⚠ invalid input. Try again.");
+                if (!Arrays.asList(validValues).contains(input)) {
+                    System.out.println("⚠ invalid input.");
                     continue;
                 }
                 return input;

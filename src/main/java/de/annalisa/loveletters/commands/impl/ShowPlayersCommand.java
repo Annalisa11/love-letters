@@ -4,6 +4,8 @@ import de.annalisa.loveletters.Game;
 import de.annalisa.loveletters.Player;
 import de.annalisa.loveletters.commands.Command;
 
+import java.util.List;
+
 public class ShowPlayersCommand implements Command {
     @Override
     public String getCommand() {
@@ -26,9 +28,10 @@ public class ShowPlayersCommand implements Command {
             System.out.println("❗ you have start the game to see the players.");
             return true;
         }
+        List<Player> players = game.getActivePlayers();
 
-        for(Player player: game.getPlayers()){
-            System.out.println(((game.getActivePlayers().contains(player) ? "\uD83C\uDF1F " : "\uD83D\uDC94 " ) + player.getName() + " " + (game.getActivePlayers().contains(player) ? "(active)" : "(knocked out)")));
+        for(Player player: players){
+            System.out.println(((players.contains(player) ? "\uD83C\uDF1F " : "\uD83D\uDC94 " ) + player.getName() + " " + (players.contains(player) ? "(active)" : "(knocked out)") + (player.isImmune() ? "  [immune] \uD83D\uDD12" : "")));
         }
         return true;
     }

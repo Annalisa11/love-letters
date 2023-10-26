@@ -133,6 +133,11 @@ public class Game {
                 break;
             }
         }
+        if(deck.getNumberOfCards() == 0){
+            System.out.println("\n\n+-------------------------------------   +");
+            System.out.println(    "| There are no more cards in the deck... |");
+            System.out.println("    +-------------------------------------   +");
+        }
         System.out.println("\n\n-------");
         System.out.println("End of Round " + round + "!");
         calculateWinnerOfRound();
@@ -161,7 +166,7 @@ public class Game {
         System.out.println("\n=== " + player.getName() + ", it's your turn! ===");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
         if (player.isImmune()) {
-            System.out.println("NOTE: Handmaid effect expired. You are not immune anymore.");
+            System.out.println("NOTE \uD83D\uDD13: Handmaid effect expired. You are not immune anymore.");
             player.setImmune();
         }
         //draw card
@@ -204,13 +209,13 @@ public class Game {
         Integer[] numbers = IntStream.rangeClosed(1, otherPlayers.size()).boxed().toArray(Integer[]::new);
         StringBuilder names = new StringBuilder();
         for (int i = 1; i <= otherPlayers.size(); i++) {
-            names.append(otherPlayers.get(i - 1).getName()).append(otherPlayers.get(i - 1).isImmune() ? " [immune]" : "").append(" (").append(i).append(")  ");
+            names.append(otherPlayers.get(i - 1).getName()).append(otherPlayers.get(i - 1).isImmune() ? " \uD83D\uDD12[immune]" : "").append(" (").append(i).append(")  ");
         }
         numbers = Arrays.stream(numbers).filter(index -> !otherPlayers.get(index - 1).isImmune()).toArray(Integer[]::new);
 
         //All players immune
         if (numbers.length == 0) {
-            System.out.println("All players are immune.");
+            System.out.println("\uD83D\uDD12 All players are immune. \uD83D\uDD12");
             System.out.println("Effect is not applied. More luck next time ;)");
             return -1;
         }

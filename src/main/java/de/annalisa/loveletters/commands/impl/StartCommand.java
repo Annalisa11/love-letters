@@ -33,7 +33,7 @@ public class StartCommand implements Command {
     @Override
     public boolean execute(Game game, boolean inGame) throws ExitGameException {
         if(inGame){
-            System.out.println("❗ you have to end the program and start again to start a new game.");
+            System.out.println("❗ you have to end the program and start again or use the '\\exit' command to start a new game.");
             return true;
         }
         game.startGame();

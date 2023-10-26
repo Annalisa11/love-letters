@@ -20,9 +20,6 @@ public class Priest extends Card {
             int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
             Player chosenPlayer = otherPlayers.get(playerNumber - 1);
             System.out.println(chosenPlayer.getName() + " has following cards: \n" + StringHelper.printCardsBesideEachOther(chosenPlayer.getHand()));
-            return;
         }
-        System.out.println("All players are immune.");
-        System.out.println("Effect is not applied. More luck next time ;)");
     }
 }

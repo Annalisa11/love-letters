@@ -17,7 +17,7 @@ public class ExitCommand implements Command {
 
     @Override
     public String getDescription() {
-        return "With exit you can exit the current game at any point.";
+        return "With exit you can exit the current game or retry a new game at any point.";
     }
 
     /**
@@ -30,7 +30,7 @@ public class ExitCommand implements Command {
     @Override
     public boolean execute(Game game, boolean inGame) throws ExitGameException {
         if (!inGame) {
-            System.out.println("You have to start a game to be able to exit it.");
+            System.out.println("You have to start a game to be able to exit it. If youo don't want to play anymore, just close the program.");
             return true;
         }
         throw new ExitGameException("you exited this game...");

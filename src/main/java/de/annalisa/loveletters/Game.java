@@ -3,6 +3,7 @@ package de.annalisa.loveletters;
 import de.annalisa.loveletters.cards.Card;
 import de.annalisa.loveletters.commands.CommandManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,6 +11,8 @@ import java.util.stream.IntStream;
 
 import de.annalisa.loveletters.cards.*;
 import de.annalisa.loveletters.exceptions.ExitGameException;
+import de.annalisa.loveletters.multiplayer.GameClient;
+import de.annalisa.loveletters.multiplayer.GameServer;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
 
@@ -28,6 +31,7 @@ public class Game {
     private final ArrayList<Player> players = new ArrayList<>();
     private final ArrayList<Player> activePlayers = new ArrayList<>();
     private final CommandManager commandManager = new CommandManager();
+    private int numberOfPlayers;
 
     public CommandManager getCommandManager() {
         return commandManager;
@@ -51,6 +55,10 @@ public class Game {
 
     public ArrayList<Player> getActivePlayers() {
         return activePlayers;
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 
     /**
@@ -256,15 +264,28 @@ public class Game {
      * Creates the players for the game based on user input.
      */
     private void createPlayers() {
-        int numberOfPlayers;
+
         numberOfPlayers = InputHelper.validateInputNumbers(new Integer[]{2, 3, 4}, "With how many players do you want to play? (2,3,4)");
-        for (int i = 0; i < numberOfPlayers; i++) {
-            System.out.println("What should player " + (i + 1) + " be called?");
-            String name = InputHelper.getStringFromConsole();
-            Player player = new Player(name);
-            players.add(player);
+        System.out.println("What's your name?");
+        getNameOfPlayer();
+        try {
+            new GameServer(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         System.out.println("Great! Let's start!");
+    }
+
+    public void getNameOfPlayer(){
+        String name = InputHelper.getStringFromConsole();
+        Player player = new Player(name);
+        players.add(player);
+    }
+
+    public void getNameOfPlayerCLIENT(GameClient gameClient) throws IOException {
+        String name = gameClient.readLine();
+        Player player = new Player(name);
+        players.add(player);
     }
 
     /**

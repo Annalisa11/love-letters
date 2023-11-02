@@ -261,6 +261,16 @@ public class Game {
             Player player = new Player(name);
             players.add(player);
         }
+
+        //determine first player
+        System.out.println("Let's determine who goes first...\nWho went most recently on a date?\nChoose a player. If there is a tie, choose the younger one.");
+        Integer[] numbers = new Integer[4];
+        for (int i = 0; i<players.size(); i++ ){
+            System.out.print(players.get(i).getName() + " (" + (i+1) + ")   ");
+            numbers[i] = (i+1);
+        }
+        int startingPlayerIndex = InputHelper.validateInputNumbers(numbers, " ");
+        roundWinner = players.get(startingPlayerIndex - 1);
         System.out.println("Great! Let's start!");
     }
 

@@ -234,6 +234,8 @@ public class Game {
         if (indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer != (activePlayers.size() - 1)) {
             turns--;
         }
+        Card cardToDrop = player.getHand().get(0);
+        System.out.println(player.getName() + " dropped the card " + cardToDrop.getName() + ".");
         activePlayers.remove(player);
     }
 

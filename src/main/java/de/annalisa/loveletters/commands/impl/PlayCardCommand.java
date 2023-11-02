@@ -31,7 +31,7 @@ public class PlayCardCommand implements Command {
         int chosenCard;
         if(game.isSpecificCardOnHand(player, 7) && (game.isSpecificCardOnHand(player, 6) || game.isSpecificCardOnHand(player, 5)) ){
             System.out.println("Oh no! Look at your cards!");
-            StringHelper.printCardsBesideEachOther(player.getHand());
+            System.out.println(StringHelper.printCardsBesideEachOther(player.getHand()));
             System.out.println("The Countess doesn't want to be near the king or the prince.. you have to discard her!");
             chosenCard = Game.getIndexOfCardInHand(player, 7);
         } else {

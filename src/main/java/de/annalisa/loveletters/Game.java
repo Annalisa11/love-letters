@@ -136,7 +136,7 @@ public class Game {
         if(deck.getNumberOfCards() == 0){
             System.out.println("\n\n+-------------------------------------   +");
             System.out.println(    "| There are no more cards in the deck... |");
-            System.out.println("    +-------------------------------------   +");
+            System.out.println(    "+-------------------------------------   +");
         }
         System.out.println("\n\n-------");
         System.out.println("End of Round " + round + "!");
@@ -170,10 +170,9 @@ public class Game {
             player.setImmune();
         }
         //draw card
-        if (!(player.getTurn() == 1)) {
-            Card drawnCard = deck.getTopCard();
-            player.addCardToHand(drawnCard);
-        }
+        Card drawnCard = deck.getTopCard();
+        player.addCardToHand(drawnCard);
+
         //update score
         player.updateScore();
         System.out.println("SCORE: " + player.getScore());
@@ -245,9 +244,7 @@ public class Game {
      */
     private void allPlayersDrawCard(ArrayList<Player> players) {
         for (Player player : players) {
-            for (int i = 0; i < 2; i++) {
-                player.addCardToHand(deck.getTopCard());
-            }
+            player.addCardToHand(deck.getTopCard());
             player.updateScore();
         }
     }

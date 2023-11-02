@@ -64,7 +64,7 @@ public class Game {
     /**
      * Starts the Love Letter game.
      *
-     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
+     * @throws ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
     public void startGame() throws ExitGameException {
         commandManager.setInGame(true);
@@ -106,7 +106,7 @@ public class Game {
     /**
      * Starts a new round of the game.
      *
-     * @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
+     * @throws ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
     private void startRound() throws ExitGameException {
         System.out.println("------");
@@ -133,10 +133,10 @@ public class Game {
                 break;
             }
         }
-        if(deck.getNumberOfCards() == 0){
-            System.out.println("\n\n+-------------------------------------   +");
-            System.out.println(    "| There are no more cards in the deck... |");
-            System.out.println(    "+-------------------------------------   +");
+        if (deck.getNumberOfCards() == 0) {
+            System.out.println("\n\n+----------------------------------------+");
+            System.out.println("| There are no more cards in the deck... |");
+            System.out.println("+----------------------------------------+");
         }
         System.out.println("\n\n-------");
         System.out.println("End of Round " + round + "!");
@@ -148,6 +148,7 @@ public class Game {
             player.clearHand();
             player.resetTurn();
             player.resetImmune();
+            player.clearDiscardedCards();
         });
         deck.clearDeck();
         threeOpenCards.clear();
@@ -160,18 +161,21 @@ public class Game {
      * Takes a turn for the given player.
      *
      * @param player The player taking their turn.
-     *               @throws  ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
+     * @throws ExitGameException to indicate that the Love Letter game should exit or terminate. This exception is used to control the flow of the game and allow players to choose whether to play again or exit the game.
      */
     private void takeTurn(Player player) throws ExitGameException {
+        //draw card
+        Card drawnCard = deck.getTopCard();
+        player.addCardToHand(drawnCard);
+
+        //display turn
         System.out.println("\n=== " + player.getName() + ", it's your turn! ===");
+        System.out.println("(You have drawn a card)");
         System.out.println("CARDS STILL IN DECK: " + deck.getNumberOfCards());
         if (player.isImmune()) {
             System.out.println("NOTE \uD83D\uDD13: Handmaid effect expired. You are not immune anymore.");
             player.setImmune();
         }
-        //draw card
-        Card drawnCard = deck.getTopCard();
-        player.addCardToHand(drawnCard);
 
         //update score
         player.updateScore();
@@ -267,9 +271,9 @@ public class Game {
         //determine first player
         System.out.println("Let's determine who goes first...\nWho went most recently on a date?\nChoose a player. If there is a tie, choose the younger one.");
         Integer[] numbers = new Integer[4];
-        for (int i = 0; i<players.size(); i++ ){
-            System.out.print(players.get(i).getName() + " (" + (i+1) + ")   ");
-            numbers[i] = (i+1);
+        for (int i = 0; i < players.size(); i++) {
+            System.out.print(players.get(i).getName() + " (" + (i + 1) + ")   ");
+            numbers[i] = (i + 1);
         }
         int startingPlayerIndex = InputHelper.validateInputNumbers(numbers, " ");
         roundWinner = players.get(startingPlayerIndex - 1);
@@ -375,16 +379,35 @@ public class Game {
     }
 
     /**
-     * Calculates the winner of the current round based on player scores.
-     * The winner of the round is awarded a love token.
+     * Calculates the winner of the current round based on player score and discarded cards score and awards a love token to the winner or winners.
+     * Players' scores are updated by considering the score of the card at hand first and if there is a tie by considering the discarded cards score. The player with the highest scores
+     * (i.e. from their hand and discarded cards) wins the round.
+     * In case of a tie where multiple players have the same score (both score and discarded cards score), all tied players receive a love token.
+     * The player or one of the tied players with the highest score is designated as the round winner.
      */
     private void calculateWinnerOfRound() {
+        for (Player player : activePlayers) {
+            player.updateDiscardedCardsScore();
+        }
         if (activePlayers.size() > 1) {
             activePlayers.sort(new Player.sortByScore());
-        }
-        roundWinner = activePlayers.get(0);
+            System.out.println("ACTIVE PLAYERS: " + activePlayers);
+            int highestScore = activePlayers.get(0).getScore();
+            int highestDiscardedCardsScore = activePlayers.get(0).getDiscardedCardsScore();
+            List<Player> winners = activePlayers.stream().filter(player -> (player.getScore() == highestScore) && (player.getDiscardedCardsScore() == highestDiscardedCardsScore)).toList();
+            if (winners.size() == 1) {
+                roundWinner = activePlayers.get(0);
+                roundWinner.addLoveToken(1);
 
-        //winner gets token
-        roundWinner.addLoveToken(1);
+            } else {
+                System.out.println("Wow there is a tie!");
+                System.out.println(StringHelper.printOnlyNames((ArrayList<Player>) winners) + " have the exact same scores on hand and the same sum of the scores of all their discarded cards...");
+                System.out.println("So you get all a love token!");
+                for (Player player : winners) {
+                    player.addLoveToken(1);
+                }
+                roundWinner = winners.get(0);
+            }
+        }
     }
 }

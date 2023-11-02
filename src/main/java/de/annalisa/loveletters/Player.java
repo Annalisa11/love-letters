@@ -17,6 +17,10 @@ public class Player {
     private int turn;
     private boolean immune;
 
+    private ArrayList<Card> discardedCards;
+
+    private int discardedCardsScore;
+
     /**
      * Initializes a new player with the given name.
      *
@@ -29,6 +33,7 @@ public class Player {
         this.loveToken = 0;
         this.turn = 1;
         this.immune = false;
+        this.discardedCards = new ArrayList<>();
     }
 
     //Getters
@@ -50,6 +55,14 @@ public class Player {
 
     public int getScore() {
         return score;
+    }
+
+    public ArrayList<Card> getDiscardedCards() {
+        return discardedCards;
+    }
+
+    public int getDiscardedCardsScore() {
+        return discardedCardsScore;
     }
 
     /**
@@ -94,6 +107,24 @@ public class Player {
     }
 
     /**
+     * Clears (removes) all cards from the list of discarded cards of a player.
+     */
+    public void clearDiscardedCards() {
+        this.discardedCards.clear();
+    }
+
+    /**
+     * Updates the player's discardedCardsScore based on the sum of the closeness values of their discarded cards .
+     */
+    public void updateDiscardedCardsScore() {
+        int res = 0;
+        for (Card card : discardedCards) {
+            res += card.getCloseness();
+        }
+        discardedCardsScore = res;
+    }
+
+    /**
      * Adds a card to the player's hand.
      *
      * @param card The card to add to the player's hand.
@@ -109,7 +140,9 @@ public class Player {
      */
     public void removeCardFromHand(int index) {
         if (!hand.isEmpty()) {
+            Card removedCard = hand.get(index);
             this.hand.remove(index);
+            discardedCards.add(removedCard);
         }
     }
 
@@ -145,20 +178,27 @@ public class Player {
     //Comparators
 
     /**
-     * A comparator for sorting Player objects based on their scores in descending order.
-     * Players with higher scores will appear first in the sorted list.
+     * A comparator for sorting Player objects based on their scores and discarded cards score in descending order.
+     * Players with higher scores will appear first in the sorted list. In case of equal scores, players will be
+     * further sorted by their discarded cards score.
      */
     public static class sortByScore implements Comparator<Player> {
         /**
-         * Compares two Player objects based on their scores.
+         * Compares two Player objects based on their scores and discarded cards score.
          *
          * @param p1 The first Player object to compare.
          * @param p2 The second Player object to compare.
-         * @return a negative integer, zero, or a positive integer as the first player's score is
-         * less than, equal to, or greater than the second player's score.
+         * @return a negative integer if the first player's score is less than the second player's score,
+         *         zero if their scores are equal, or a positive integer if the first player's score is greater
+         *         than the second player's score. If scores are equal, the discarded cards score is considered
+         *         for the comparison.
          */
         public int compare(Player p1, Player p2) {
-            return p2.score - p1.score;
+            int scoreComparison = p2.score - p1.score;
+            if (scoreComparison != 0) {
+                return scoreComparison;
+            }
+            return p2.discardedCardsScore - p1.discardedCardsScore;
         }
     }
 
@@ -172,6 +212,6 @@ public class Player {
      */
     @Override
     public String toString() {
-        return name + " - " + score + " - " + hand;
+        return name + " - " + score + " - " + discardedCardsScore;
     }
 }

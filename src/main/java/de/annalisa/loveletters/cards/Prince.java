@@ -30,7 +30,7 @@ public class Prince extends Card {
                 System.out.println(chosenPlayer.getName() + " had to discard the Princess... what a shame, " + chosenPlayer.getName() + " is knocked out!");
                 return;
             }
-            hand.remove(cardToDropIndex);
+            chosenPlayer.removeCardFromHand(cardToDropIndex);
             Card drawnCard = game.getDeck().getTopCardWithSpecialFallback(game.getFirstCardOfDeck());
             chosenPlayer.addCardToHand(drawnCard);
 

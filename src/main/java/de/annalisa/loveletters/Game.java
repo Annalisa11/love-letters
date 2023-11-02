@@ -391,7 +391,7 @@ public class Game {
         }
         if (activePlayers.size() > 1) {
             activePlayers.sort(new Player.sortByScore());
-            System.out.println("ACTIVE PLAYERS: " + activePlayers);
+            System.out.println("You have following scores and discarded cards scores: " + activePlayers);
             int highestScore = activePlayers.get(0).getScore();
             int highestDiscardedCardsScore = activePlayers.get(0).getDiscardedCardsScore();
             List<Player> winners = activePlayers.stream().filter(player -> (player.getScore() == highestScore) && (player.getDiscardedCardsScore() == highestDiscardedCardsScore)).toList();

@@ -238,8 +238,12 @@ public class Game {
         if (indexOfPlayer == indexOfCurrentPlayer && indexOfCurrentPlayer != (activePlayers.size() - 1)) {
             turns--;
         }
+        Card secondCardToDrop = null;
+        if (player == currentPlayer){
+            secondCardToDrop = player.getHand().get(1);
+        }
         Card cardToDrop = player.getHand().get(0);
-        System.out.println(player.getName() + " dropped the card " + cardToDrop.getName() + ".");
+        System.out.println(player.getName() + " dropped the card " + cardToDrop.getName() + (secondCardToDrop != null ? (" and the card " + secondCardToDrop.getName()) : "") + ".");
         activePlayers.remove(player);
     }
 
@@ -388,6 +392,7 @@ public class Game {
     private void calculateWinnerOfRound() {
         for (Player player : activePlayers) {
             player.updateDiscardedCardsScore();
+            player.updateScore();
         }
         if (activePlayers.size() > 1) {
             activePlayers.sort(new Player.sortByScore());

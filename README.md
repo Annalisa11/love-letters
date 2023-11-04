@@ -109,9 +109,9 @@ For Windows you can try following steps:
 
 Here you can see the most recent UML diagram for my code. 
 
-![UML diagram](src/main/resources/UML-diagrams/UML-diagram_04.png "UML diagram")
-You can also check out [previous versions](src/main/resources/UML-diagrams) of the diagram.  
-_(src/main/resources/UML-diagrams)_
+![UML diagram](UML-diagrams/UML-diagram_04.png "UML diagram")
+You can also check out [previous versions](UML-diagrams) of the diagram.  
+_(UML-diagrams)_
 
 ## 👩‍💻 Author 
 Annalisa Comin

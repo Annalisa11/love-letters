@@ -1,3 +1,9 @@
+/**
+ * The "showHand" command allows a player to view the cards they have in their hand without taking any other actions.
+ * <p>
+ * When executed, this command is used within the context of a game to display the cards in the current player's hand.
+ * It provides an overview of the player's hand without requiring them to play a card or perform any other actions.
+ */
 package de.annalisa.loveletters.commands.impl;
 
 import de.annalisa.loveletters.Game;
@@ -16,15 +22,29 @@ public class ShowHandCommand implements Command {
         return new String[0];
     }
 
+    /**
+     * Get the description of the "showHand" command.
+     *
+     * @return A brief description of the "showHand" command and its purpose in the Love Letter game.
+     */
     @Override
     public String getDescription() {
         return "With showHand you can see which cards you have on your hand without having to do play one or do anything else. (In-game only)";
     }
 
+    /**
+     * Execute the "showHand" command to display the cards in the current player's hand during the game.
+     * It provides a convenient way for the player to view their hand without taking any other actions.
+     *
+     * @param game   The current game instance where the command will be executed.
+     * @param inGame A boolean indicating whether the command is executed during a game session.
+     * @return {@code true} to indicate that the loop should ask for more input (because of invalid input), or {@code false}
+     * to stop scanning for more input.
+     */
     @Override
     public boolean execute(Game game, boolean inGame) {
-        if(!inGame){
-            System.out.println("❗ you have to start the game to view your cards");
+        if (!inGame) {
+            System.out.println("❗ You have to start the game to view your cards.");
             return true;
         }
         Player player = game.getCurrentPlayer();

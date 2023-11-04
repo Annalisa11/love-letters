@@ -1,3 +1,7 @@
+/**
+ * The Priest card in the Love Letter game.
+ * Priest is a card with a value of 2 and the following effect: "Look at another player's hand."
+ */
 package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
@@ -11,6 +15,13 @@ public class Priest extends Card {
         super("Priest", 2, "Look at another player's hand");
     }
 
+    /**
+     * Applies the effect of the Priest card.
+     * <p>
+     * The player can choose a player and see their cards.
+     *
+     * @param game The Love Letter game in progress.
+     */
     @Override
     public void applyEffect(Game game) {
         Player currentPlayer = game.getCurrentPlayer();
@@ -19,7 +30,7 @@ public class Priest extends Card {
         if (otherPlayers.stream().anyMatch(player -> !player.isImmune())) {
             int playerNumber = game.choosePlayerForEffect(otherPlayers, "Choose a player whose cards you want to look at: ");
             Player chosenPlayer = otherPlayers.get(playerNumber - 1);
-            System.out.println(chosenPlayer.getName() + " has following cards: \n" + StringHelper.printCardsBesideEachOther(chosenPlayer.getHand()));
+            System.out.println(chosenPlayer.getName() + " has the following cards: \n" + StringHelper.printCardsBesideEachOther(chosenPlayer.getHand()));
         }
     }
 }

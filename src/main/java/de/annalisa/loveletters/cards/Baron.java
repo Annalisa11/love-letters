@@ -1,3 +1,8 @@
+/**
+ * The Baron card in the Love Letter game.
+ * Baron is a card with a value of 3 and the following effect: "You and another player secretly compare hands.
+ * The player with the lower value is out of the round."
+ */
 package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
@@ -12,6 +17,15 @@ public class Baron extends Card {
         super("Baron", 3, "You and another player secretly compare hands. The player with the lower value is out of the round.");
     }
 
+    /**
+     * Applies the effect of the Baron card.
+     * <p>
+     * the score is set to currentScore - 3 before the comparison takes place, so that the score is only compared to the other card on hand.
+     * If the chosen player has the named card, the scores of the card on hand of both players get compared. Whoever has the lowest score gets knocked out.
+     * If there is a tie, nothing happens.
+     *
+     * @param game The Love Letter game in progress.
+     */
     @Override
     public void applyEffect(Game game) {
         Player currentPlayer = game.getCurrentPlayer();

@@ -17,16 +17,60 @@ import de.annalisa.loveletters.utils.StringHelper;
  * The `Game` class represents a Love Letter card game session. It manages the game flow, player interactions, and scoring.
  */
 public class Game {
+    /**
+     * The deck of cards used in the Love Letter game.
+     */
     private Deck deck;
+
+    /**
+     * The current round number of the game.
+     */
     private int round = 1;
+
+    /**
+     * The number of turns in the current round.
+     * It is used to determine the current player. The turn number is the index used to retrieve the right player from the activePlayers list.
+     */
     private int turns = 0;
+
+    /**
+     * The first card of the deck that is set aside.
+     */
     private Card firstCardOfDeck;
+
+    /**
+     * A list containing the three open cards for players to view.
+     */
     private final ArrayList<Card> threeOpenCards = new ArrayList<>(3);
+
+    /**
+     * The player whose turn it is.
+     */
     private Player currentPlayer;
+
+    /**
+     * The winner of the current round.
+     */
     private Player roundWinner;
+
+    /**
+     * The overall winner of the game.
+     */
     private Player gameWinner;
+
+    /**
+     * The list of players participating in the game.
+     */
     private final ArrayList<Player> players = new ArrayList<>();
+
+    /**
+     * The list of active players who have not been knocked out in the current round.
+     */
     private final ArrayList<Player> activePlayers = new ArrayList<>();
+
+    /**
+     * The command manager used for handling game commands.
+     */
     private final CommandManager commandManager = new CommandManager();
 
     public CommandManager getCommandManager() {
@@ -239,7 +283,7 @@ public class Game {
             turns--;
         }
         Card secondCardToDrop = null;
-        if (player == currentPlayer){
+        if (player == currentPlayer) {
             secondCardToDrop = player.getHand().get(1);
         }
         Card cardToDrop = player.getHand().get(0);

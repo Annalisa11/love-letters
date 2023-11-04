@@ -1,3 +1,8 @@
+/**
+ * The Guard card in the Love Letter game.
+ * Guard is a card with a value of 1 and the following effect: "Name a non-Guard card and choose another player.
+ * If that player has that card, he or she is out of the round."
+ */
 package de.annalisa.loveletters.cards;
 
 import de.annalisa.loveletters.Game;
@@ -11,6 +16,14 @@ public class Guard extends Card {
         super("Guard", 1, "Name a non-Guard card and choose another player. If that player has that card, he or she is out of the round.");
     }
 
+    /**
+     * Applies the effect of the Guard card, allowing the player to name a card and potentially knock out another player.
+     * <p>
+     * If the chosen player the named card, they are eliminated from the round.
+     * If the chosen player does not have the named card, the Guard has no effect.
+     *
+     * @param game The Love Letter game in progress.
+     */
     @Override
     public void applyEffect(Game game) {
         Player currentPlayer = game.getCurrentPlayer();

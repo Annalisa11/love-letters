@@ -43,7 +43,7 @@ public class ShowScoreCommand implements Command {
     @Override
     public boolean execute(Game game, boolean inGame) {
         if (!inGame) {
-            System.println("❗ You have to start the game to view all players' scores.");
+            System.out.println("❗ You have to start the game to view all players' scores.");
             return true;
         }
         System.out.println("TOKENS:\n" + game.getPlayers().stream()

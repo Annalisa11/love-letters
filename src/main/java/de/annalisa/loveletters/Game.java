@@ -413,6 +413,9 @@ public class Game {
                 }
                 roundWinner = winners.get(0);
             }
+        } else {
+            roundWinner = activePlayers.get(0);
+            roundWinner.addLoveToken(1);
         }
     }
 }

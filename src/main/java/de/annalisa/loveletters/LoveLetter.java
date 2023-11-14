@@ -3,12 +3,14 @@ package de.annalisa.loveletters;
 import de.annalisa.loveletters.exceptions.ExitGameException;
 import de.annalisa.loveletters.utils.InputHelper;
 import de.annalisa.loveletters.utils.StringHelper;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
  * The `LoveLetter` class is the main class for the Love Letter game application.
  * It provides the entry point for the game and allows players to start or restart the game.
  */
-public class LoveLetter {
+public class LoveLetter extends Application {
     public static boolean playAgain = true;
 
     /**
@@ -26,19 +28,19 @@ public class LoveLetter {
         }
     }
 
+    @Override
+    public void start(Stage primaryStage) {
+        LoveLettersApp app = new LoveLettersApp();
+        app.start(primaryStage);
+    }
+
     /**
      * The main entry point of the Love Letter game application.
      *
      * @param args The command-line arguments passed to the application (not used in LoveLetters).
      */
     public static void main(String[] args) {
-        do {
-            startLoveLetter();
-            int response = InputHelper.validateInputNumbers(new Integer[]{1, 2}, "Do you want to play again?\nYES (1)   NO (2)");
-            System.out.println(response);
-            if (response == 2) {
-                playAgain = false;
-            }
-        } while (playAgain);
+        launch(args);
     }
+
 }

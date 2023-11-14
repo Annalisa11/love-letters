@@ -1,0 +1,23 @@
+.button {
+    -fx-padding: 10px;
+    -fx-border-radius: 50px; /* Replace with your desired border radius value */
+    -fx-text-align: center;
+    -fx-background-color: #9b0f0f; /* Replace with your desired background color */
+    -fx-margin-top: 15px;
+
+    /* Hover state */
+    -fx-background: linear-gradient(
+            #d24141,
+            #8a7e7e
+    );
+
+    -fx-cursor: hand; /* Cursor pointer on hover */
+
+    /* Label styling */
+    -fx-text-fill: #ffffff; /* Replace with your desired text color */
+
+}
+
+.label {
+
+}

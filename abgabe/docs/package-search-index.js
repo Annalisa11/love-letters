@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"de.annalisa.loveletters"},{"l":"de.annalisa.loveletters.cards"},{"l":"de.annalisa.loveletters.commands"},{"l":"de.annalisa.loveletters.commands.impl"},{"l":"de.annalisa.loveletters.exceptions"},{"l":"de.annalisa.loveletters.utils"}];updateSearchResults();
